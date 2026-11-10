@@ -182,8 +182,7 @@ const $=s=>document.querySelector(s);
 const grid=$("#grid"),peek=$("#peek"),dlg=$("#dlg");
 let opened=new Set(),data={},cur=0,iv=null;
 try{data=JSON.parse(localStorage.getItem("advent-data")||"{}")}catch(e){}
-const save=()=>{try{localStorage.setItem("advent-open",JSON.stringify([...opened]));localStorage.setItem("advent-data",JSON.stringify(data))}catch(e){}};
-// Start every page visit with all doors closed; keep the saved memories.
+const save=()=>{try{localStorage.setItem("advent-open",JSON.stringify([...opened]));localStorage.setItem("advent-data",JSON.stringify(data))}catch(e){} window.cloudSave&&window.cloudSave()};// Start every page visit with all doors closed; keep the saved memories.
 opened.clear();save();
 const now=new Date();
 const unlocked=d=>now.getFullYear()>2026||(now.getFullYear()===2026&&now.getMonth()===11&&d<=now.getDate());
@@ -294,8 +293,7 @@ function widget(w,d){
   return b;
 }
 let meta={};try{meta=JSON.parse(localStorage.getItem("advent-meta")||"{}")}catch(e){}
-const sm=()=>{try{localStorage.setItem("advent-meta",JSON.stringify(meta))}catch(e){}};
-meta.gifts=meta.gifts||[];let ft="all",fq="",ac;
+const sm=()=>{try{localStorage.setItem("advent-meta",JSON.stringify(meta))}catch(e){} window.cloudSave&&window.cloudSave()};meta.gifts=meta.gifts||[];let ft="all",fq="",ac;
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const NOTE=["Distance is just a number, and I’m counting every day until we’re together.","You make even a screen feel like home.","Every door in this calendar is really a reason to hear your voice.","I’m grateful for you today, tomorrow and every Christmas after.","My favorite part of December is spending it with you, wherever we are.","You are my favorite gift, no wrapping needed.","Nothing sparkles like your laugh."];
 const QS=["What’s a Christmas memory that always makes you smile?","What’s one thing you want us to do on our first Christmas in the same place?","What was your favorite gift ever, and why?","What do you love most about how we love each other?","What’s a small moment this year you’d relive?","What tradition from your childhood should we keep?","What are you most looking forward to next year?","What’s one thing I do that makes you feel loved?"];
@@ -360,6 +358,58 @@ render();
   for(let i=0;i<80;i++)f.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*2.6+.6,s:Math.random()*.8+.3,o:Math.random()*.5+.25,p:Math.random()*6});
   (function loop(){x.clearRect(0,0,W,H);for(const s of f){s.y+=s.s;s.p+=.01;s.x+=Math.sin(s.p)*.4;if(s.y>H+5){s.y=-5;s.x=Math.random()*W}x.beginPath();x.arc(s.x,s.y,s.r,0,6.283);x.fillStyle=`rgba(255,255,255,${s.o})`;x.fill()}requestAnimationFrame(loop)})();
 })();
+</script>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {getFirestore,doc,setDoc,onSnapshot} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app=initializeApp({
+  apiKey:"AIzaSyBLvKQb4IBrB8FRQtZJTuaIXzJccEHn6Ps",
+  authDomain:"adventcalendar-e5122.firebaseapp.com",
+  projectId:"adventcalendar-e5122",
+  storageBucket:"adventcalendar-e5122.firebasestorage.app",
+  messagingSenderId:"874021562919",
+  appId:"1:874021562919:web:20b7971302f14c2a42bc02"
+});
+const db=getFirestore(app);
+
+// SCHIMBĂ asta cu un text lung și al vostru, apoi nu-l mai da nimănui
+const ROOM="k7Qx92mWvR4tLp8ZcN3aYb6H";
+const ref=doc(db,"calendars",ROOM);
+
+let ready=false,timer=null;
+
+// salvare în cloud (grupată, ca să nu scrie la fiecare literă)
+window.cloudSave=()=>{
+  if(!ready)return;
+  clearTimeout(timer);
+  timer=setTimeout(async()=>{
+    timer=null;
+    try{
+      await setDoc(ref,JSON.parse(JSON.stringify({
+        data,
+        meta:{n1:meta.n1||"",n2:meta.n2||"",gifts:meta.gifts||[]},
+        updated:Date.now()
+      })));
+    }catch(e){console.error("Salvare eșuată",e)}
+  },800);
+};
+
+// citire în timp real
+onSnapshot(ref,snap=>{
+  if(ready&&(snap.metadata.hasPendingWrites||timer))return;
+  const v=snap.exists()?snap.data():{};
+  const cd=v.data||{};
+  Object.keys(cd).forEach(k=>{data[k]=Object.assign(data[k]||{},cd[k])});
+  const m=v.meta||{};
+  if(m.n1)meta.n1=m.n1;
+  if(m.n2)meta.n2=m.n2;
+  if(m.gifts&&(ready||m.gifts.length))meta.gifts=m.gifts;
+  $("#n1").value=meta.n1||"";
+  $("#n2").value=meta.n2||"";
+  render();gl();
+  if(!ready){ready=true;window.cloudSave()}
+},e=>console.error("Eroare Firestore",e));
 </script>
 </body>
 </html>
