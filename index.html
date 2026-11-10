@@ -1,0 +1,365 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>24 Nights, Two Screens: Our Advent Calendar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--pine:#0d2b2a;--berry:#a8213b;--berry2:#c93a55;--gold:#e8b95a;--gold2:#f6d98f;--snow:#f4efe6;--serif:'Fraunces',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--snow);min-height:100vh;background:radial-gradient(900px 500px at 15% -5%,rgba(232,185,90,.16),transparent 60%),radial-gradient(800px 600px at 100% 30%,rgba(168,33,59,.22),transparent 60%),linear-gradient(180deg,#0a2221 0%,#0d2b2a 45%,#091a2b 100%);background-attachment:fixed;padding-bottom:4rem;overflow-x:hidden}
+#snow{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:0 1.25rem}
+.lights{display:flex;justify-content:space-between;padding:0 .5rem;position:relative;height:46px;margin-top:-4px}
+.lights::before{content:"";position:absolute;left:0;right:0;top:0;height:14px;border-bottom:2px solid #2d5a55;border-radius:0 0 50% 50%/0 0 100% 100%}
+.bulb{width:14px;height:22px;border-radius:50% 50% 55% 55%;margin-top:10px;position:relative;box-shadow:0 0 14px 3px currentColor;background:currentColor}
+.bulb:nth-child(4n+1){color:var(--berry2)}.bulb:nth-child(4n+2){color:var(--gold)}.bulb:nth-child(4n+3){color:#4fb39a}.bulb:nth-child(4n){color:#7aa2ff}
+.bulb:nth-child(even){margin-top:18px}
+.bulb::before{content:"";position:absolute;left:3px;top:-6px;width:8px;height:7px;background:#243b39;border-radius:2px}
+header{text-align:center;padding:2.5rem 0 2rem}
+.sub{font-size:1.05rem;color:var(--gold2);letter-spacing:.02em}
+h1{font-family:var(--serif);font-weight:800;font-size:clamp(2.6rem,8vw,5.6rem);line-height:.98;margin:.6rem 0 1rem;background:linear-gradient(180deg,#fff6df 10%,var(--gold) 70%);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-.02em;animation:rise 1.2s cubic-bezier(.2,.8,.2,1) both}
+.lede{max-width:34rem;margin:0 auto;color:#cfe0da;line-height:1.6}
+.count{display:inline-block;margin-top:1.1rem;padding:.45rem 1.1rem;border:1px solid rgba(232,185,90,.45);border-radius:99px;color:var(--gold2);font-weight:500}
+.drive-link{display:table;margin:.75rem auto 0}
+@keyframes rise{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:none}}
+.bar{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between;background:rgba(8,25,26,.6);border:1px solid rgba(232,185,90,.3);border-radius:18px;padding:.9rem 1.2rem;margin:1.5rem 0 1.75rem;backdrop-filter:blur(6px)}
+.progress{flex:1;min-width:220px}
+.progress b{font-family:var(--serif);font-size:1.3rem;color:var(--gold2)}
+.progress small{margin-left:.6rem;color:#a9c4bc}
+.track{height:8px;background:rgba(255,255,255,.1);border-radius:99px;margin-top:.45rem;overflow:hidden}
+.fill{height:100%;width:0;background:linear-gradient(90deg,var(--berry2),var(--gold));border-radius:99px;transition:width .6s}
+.btns{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.switch{display:flex;gap:.5rem;align-items:center;font-size:.9rem;cursor:pointer;color:#dfeee8}
+.switch input{accent-color:var(--gold);width:18px;height:18px}
+button.ghost{font:inherit;font-size:.9rem;color:var(--snow);background:transparent;border:1px solid rgba(244,239,230,.4);border-radius:99px;padding:.45rem 1rem;cursor:pointer}
+button.ghost:hover{background:rgba(244,239,230,.12)}
+button.gold{background:linear-gradient(90deg,var(--gold),var(--gold2));color:#2a1a07;border-color:transparent;font-weight:700}
+:focus-visible{outline:3px solid var(--gold2);outline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-flow:dense;gap:14px}
+@media(max-width:900px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:520px){.grid{grid-template-columns:repeat(2,1fr);gap:10px}}
+.cell{position:relative;min-height:215px;perspective:900px}
+.cell.wide{grid-column:span 2}
+.cell.shake{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.inside,.door{position:absolute;inset:0;border-radius:16px}
+.inside{background:radial-gradient(circle at 50% 0%,#fff3d0 0%,#f2cf84 40%,#d99b3c 100%);color:#2a1a07;padding:.9rem .9rem 1rem;display:flex;flex-direction:column;gap:.3rem;overflow:hidden;box-shadow:inset 0 0 30px rgba(120,60,0,.35);cursor:pointer;text-align:left;border:0;font:inherit}
+.inside .em{font-size:1.8rem;line-height:1}
+.inside h3{font-family:var(--serif);font-weight:800;font-size:1rem;line-height:1.15;padding-right:1.6rem}
+.inside p{font-size:.78rem;line-height:1.35;color:#4a3010}
+.inside .day{position:absolute;right:.7rem;top:.5rem;font-family:var(--serif);font-weight:800;font-size:1.3rem;color:rgba(120,60,0,.45)}
+.inside .more{margin-top:auto;font-size:.75rem;font-weight:700;color:#7b1228}
+.inside .tick{position:absolute;left:.6rem;bottom:.5rem;font-size:1.1rem}
+.wide .inside h3{font-size:1.25rem}.wide .inside p{font-size:.88rem}
+.door{--c1:var(--berry);--c2:#7b1228;transform-origin:left center;transition:transform .9s cubic-bezier(.5,.1,.2,1);background:radial-gradient(circle at 50% 50%,transparent 0 38%,rgba(255,255,255,.07) 38% 39%,transparent 39%),repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0 6px,transparent 6px 12px),linear-gradient(150deg,var(--c1),var(--c2));border:2px solid rgba(232,185,90,.7);display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer;box-shadow:0 10px 24px rgba(0,0,0,.4),inset 0 0 0 7px rgba(8,25,26,.18);backface-visibility:hidden;color:var(--gold2);font:inherit}
+.door::before{content:"";position:absolute;inset:10px;border:1px dashed rgba(246,217,143,.45);border-radius:10px}
+.door:hover{filter:brightness(1.12)}
+.door .n{font-family:var(--serif);font-weight:800;font-size:3.2rem;line-height:1;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+.wide .door .n{font-size:4.6rem}
+.door .orn{font-size:1.1rem;margin-top:.35rem;opacity:.9}
+.door .knob{position:absolute;right:14px;top:50%;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff3c4,var(--gold) 60%,#a36d12)}
+.door .lock{position:absolute;left:12px;bottom:10px;font-size:.95rem}
+.v1 .door{--c1:#1c5a54;--c2:#0b2f2c}.v2 .door{--c1:#223a73;--c2:#0f1d3d}
+.v3 .door{--c1:#d0a24a;--c2:#8a5d14;color:#2b1a05}.v3 .door::before{border-color:rgba(43,26,5,.45)}
+.cell.open .door{transform:rotateY(-118deg);pointer-events:none}
+.cell.today .door{box-shadow:0 0 0 3px var(--gold2),0 0 28px 6px rgba(246,217,143,.55)}
+.cell.locked .door{filter:saturate(.55) brightness(.8)}
+.cell.locked .door:hover{filter:saturate(.55) brightness(.9)}
+.pop{position:fixed;z-index:20;font-size:1.6rem;pointer-events:none}
+#toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,40px);opacity:0;z-index:30;background:var(--snow);color:#2a1a07;font-weight:500;padding:.75rem 1.25rem;border-radius:99px;transition:.35s;box-shadow:0 10px 30px rgba(0,0,0,.4);max-width:92vw;text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+dialog{margin:auto;width:min(640px,94vw);max-height:90vh;overflow:auto;border:1px solid rgba(232,185,90,.55);border-radius:22px;padding:1.5rem;color:var(--snow);background:linear-gradient(160deg,#14403d,#0a2221 70%);box-shadow:0 30px 80px rgba(0,0,0,.6)}
+dialog::backdrop{background:rgba(4,12,14,.7);backdrop-filter:blur(3px)}
+dialog h2{font-family:var(--serif);font-weight:800;font-size:1.8rem;color:var(--gold2);line-height:1.1;padding-right:2.5rem}
+dialog .dt{color:var(--gold);font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.3rem}
+dialog .x{position:absolute;right:1rem;top:1rem}
+dialog p.d{margin:.8rem 0;line-height:1.6;color:#dcebe5}
+dialog h4{margin:1.1rem 0 .4rem;color:var(--gold2);font-family:var(--serif)}
+dialog ol{padding-left:1.2rem;line-height:1.6;color:#dcebe5;font-size:.95rem}
+.box{margin-top:.9rem;padding:1rem;border:1px solid rgba(232,185,90,.3);border-radius:14px;background:rgba(8,25,26,.55)}
+.box .big{font-family:var(--serif);font-size:1.25rem;color:var(--snow);min-height:3rem;margin:.6rem 0;line-height:1.3}
+.row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.lnk{display:inline-block;font-size:.88rem;color:var(--snow);text-decoration:none;border:1px solid rgba(244,239,230,.4);border-radius:99px;padding:.4rem .9rem}
+.lnk:hover{background:rgba(244,239,230,.12)}
+.lnk.gold{background:linear-gradient(90deg,var(--gold),var(--gold2));color:#2a1a07;font-weight:700;border-color:transparent}
+textarea{width:100%;min-height:90px;margin-top:.4rem;font:inherit;color:var(--snow);background:rgba(8,25,26,.7);border:1px solid rgba(232,185,90,.35);border-radius:12px;padding:.7rem;resize:vertical}
+.clock{font-family:var(--serif);font-size:2.6rem;color:var(--gold2)}
+.tree{position:relative;width:240px;height:290px;margin:.6rem auto;cursor:crosshair;user-select:none}
+.tree .cone{position:absolute;inset:0 0 30px;background:linear-gradient(#2c8a5a,#14583a);clip-path:polygon(50% 0,92% 45%,72% 45%,100% 78%,0 78%,28% 45%,8% 45%)}
+.tree .trunk{position:absolute;left:50%;bottom:0;width:36px;height:40px;margin-left:-18px;background:#7a4a22;border-radius:4px}
+.tree .o{position:absolute;font-size:1.3rem;transform:translate(-50%,-50%)}
+.pal button{font-size:1.4rem;background:none;border:2px solid transparent;border-radius:10px;cursor:pointer;padding:.1rem .3rem}
+.pal button.on{border-color:var(--gold)}
+.tools input[type=text],.tools select{font:inherit;font-size:.9rem;color:var(--snow);background:rgba(8,25,26,.7);border:1px solid rgba(232,185,90,.35);border-radius:99px;padding:.4rem .8rem;max-width:150px}
+.tools select option{color:#000}
+.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;align-items:start}
+.panels h4{font-family:var(--serif);color:var(--gold2);margin-bottom:.5rem}
+.panels ul{list-style:none;padding:0;margin:.5rem 0}
+.panels li{display:flex;gap:.5rem;align-items:center;font-size:.92rem;padding:.15rem 0}
+.panels li button{margin-left:auto;background:none;border:0;color:#e9a0ad;cursor:pointer}
+.panels small{color:#a9c4bc;line-height:1.5;display:block}
+.hearts button{font-size:1.5rem;background:none;border:0;cursor:pointer;color:var(--berry2)}
+body.calm *{animation:none!important;transition:none!important}
+footer{text-align:center;margin-top:3rem;color:#a9c4bc;font-size:.9rem}
+footer .tips{max-width:36rem;margin:0 auto 1rem;line-height:1.6}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="snow" aria-hidden="true"></canvas>
+<div class="wrap">
+  <div class="lights" id="lights" aria-hidden="true"></div>
+  <header>
+    <p class="sub">An advent calendar for two, one screen apart</p>
+    <h1>24 Nights,<br>Two Screens</h1>
+    <p class="lede">One door a day. Open today’s, then call each other and do it together. Every door has steps, tools and a place for your notes.</p>
+    <span class="count" id="cd"></span>
+    <a class="lnk gold drive-link" target="_blank" rel="noopener" href="https://drive.google.com/drive/folders/18any2-EWqiZTSojLRKOTq_ZzU_y5YmYn?usp=sharing">📁 Our shared Drive</a>
+    <p class="sub" id="for" style="margin-top:.9rem"></p>
+  </header>
+  <section class="bar" aria-label="Progress and settings">
+    <div class="progress"><b id="count">0 of 24 doors open</b><small id="done">0 done together</small><div class="track"><div class="fill" id="fill"></div></div></div>
+    <div class="btns">
+      <label class="switch"><input type="checkbox" id="peek"> Open any door</label>
+      <button class="ghost" id="reset" type="button">Close all doors</button>
+    </div>
+  </section>
+  <section class="bar tools" aria-label="Tools">
+    <input type="text" id="n1" placeholder="Your name" aria-label="Your name"><input type="text" id="n2" placeholder="Partner’s name" aria-label="Partner name">
+    <input type="text" id="q" placeholder="🔎 Search doors" aria-label="Search doors">
+    <select id="ft" aria-label="Filter"><option value="all">All doors</option><option value="todo">Not done yet</option><option value="done">Done together</option></select>
+    <div class="btns"><button class="ghost" id="jing" type="button">🔔 Jingle</button><button class="ghost" id="sndT" type="button">🔊 Sound</button><button class="ghost" id="snowT" type="button">❄️ Snow</button><button class="ghost" id="calmT" type="button">🕊️ Calm mode</button><button class="ghost" id="txtT" type="button">A+ Text</button><button class="ghost" id="copyAll" type="button">📋 Copy memories</button></div>
+  </section>
+  <section class="bar panels">
+    <div><h4>Today</h4><button class="ghost gold" id="today" type="button"></button><small id="streak" style="margin-top:.6rem"></small><small id="badges"></small><p class="lede" id="lnote" style="margin-top:.7rem;font-style:italic;font-size:.95rem"></p><button class="ghost" id="nl" type="button" style="margin-top:.5rem">💝 New love note</button></div>
+    <div><h4>Our two clocks 🌍</h4><div class="row"><select id="z1" aria-label="Your time zone"></select><b id="t1"></b></div><div class="row" style="margin-top:.5rem"><select id="z2" aria-label="Partner time zone"></select><b id="t2"></b></div><small style="margin-top:.5rem" id="zd"></small></div>
+    <div><h4>Gift ideas 🎁</h4><div class="row"><input type="text" id="gi" placeholder="Add an idea" aria-label="Gift idea" style="max-width:170px;font:inherit;font-size:.9rem;color:var(--snow);background:rgba(8,25,26,.7);border:1px solid rgba(232,185,90,.35);border-radius:99px;padding:.4rem .8rem"><button class="ghost" id="ga" type="button">Add</button></div><ul id="gl"></ul></div>
+  </section>
+  <main class="grid" id="grid"></main>
+  <footer>
+    <p class="tips">Use the arrow keys inside an open door to move between days. Tip: tap an open card to see the steps, tools, a timer or a game, then tick “Done together” and jot down a memory. Your notes and memories are saved on this device.</p>
+    <p>Merry Christmas to us ♥</p>
+  </footer>
+</div>
+<dialog id="dlg"><button class="ghost x" id="close" type="button" aria-label="Close">✕</button><div id="dbody"></div></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+const S=q=>["search","https://www.google.com/search?q="+encodeURIComponent(q)];
+const D=[
+["🌟","Create our yearly tradition","Invent one Christmas tradition that you will do together every year on the 24th, and write it down.",["Each of you suggests two ideas","Pick the one that works both far apart and together","Decide when, what you need and who prepares what","Write it in the box below so you can repeat it every year"],[["ideas","Need inspiration?",["Open one gift at midnight on video","Cook the same dish and eat together","Read a favorite passage and light a candle","Record a yearly video message","Take a matching photo each year","Call at sunset and share a toast"]],["note","Our tradition, written down"]]],
+["🎄","Decorate a 3D Christmas tree together","Pick a 3D tree decorator, share your screen or decorate side by side, and compare your trees.",["Search for an online 3D tree decorator you both like","Open it at the same time and share your screens","Take turns adding one decoration each","Screenshot both trees and vote on a winner"],[["links",[S("online 3D christmas tree decorator"),S("free christmas tree decorating game browser")]],["tree"]]],
+["🧩","Complete the same Christmas puzzle","Pick a digital puzzle and race to finish it together. Same picture, same piece count, different screens.",["Choose a puzzle size (100 pieces is a good start)","Open the same puzzle in a free online jigsaw site","Hit start on the stopwatch at the same moment","Press your button when you finish and compare times"],[["links",[S("free online christmas jigsaw puzzle"),S("online jigsaw puzzle play together")]],["race"]]],
+["📷","Look through old pictures","Scroll through old photos together and tell the stories behind them.",["Each pick five photos that mean something","Share your screen and take turns telling the story","Ask: what do you remember that I don’t?"],[["note","Favorite memory we rediscovered"]]],
+["🍪","Bake Christmas cookies","Bake cookies together on video. Same recipe, two kitchens, one verdict.",["Agree on a recipe and a shopping list","Cook on camera and swap tips","Taste-test and rate each other’s cookies out of 10"],[["links",[S("easy christmas cookie recipe"),S("gingerbread cookie recipe")]],["timer",12]]],
+["🎬","Christmas movie night","Pick a film, press play at the same moment and share reactions in the call.",["Spin the picker or choose together","Use a watch-party tool, or count down “3, 2, 1, play”","Keep the call open, mute during dialogue and react in the gaps"],[["ideas","Movie picker",["Home Alone","Elf","The Holiday","Love Actually","It’s a Wonderful Life","The Polar Express","A Christmas Story","Klaus","Arthur Christmas","Little Women"]],["links",[S("watch party extension for netflix"),S("best christmas movies for couples")]]]],
+["❓","Create Christmas quizzes","Make questions about each other, your relationship and Christmas traditions, then quiz each other.",["Write 8 questions each in secret","Mix easy, silly and tricky ones","Take turns asking, then total the score below"],[["count",16,"correct answers"]]],
+["💌","Write a letter to your future selves","Write about your relationship today and agree to read the letters next Christmas.",["Write for 15 minutes, no peeking","Describe where you are, what you love and what you hope","Seal it and set a reminder for next Christmas"],[["timer",15],["note","A line from my letter I want to remember"]]],
+["💛","The appreciation challenge","Take turns naming 20 things you appreciate about each other without repeating anything.",["Decide who starts","No repeats, no skipping","Count every point with the counter below"],[["count",20,"things appreciated"]]],
+["📺","Become Christmas news reporters","Each prepare a ridiculous two-minute broadcast about what’s happening in your imaginary North Pole.",["Take 10 minutes to write your story","Use a headline, an elf interview and the weather","Perform it live and score each other"],[["ideas","Breaking news idea",["Elves go on strike over cookie quality","Reindeer lose their GPS","Snowman elected mayor","Santa’s sleigh gets a parking ticket","Mrs. Claus opens a bakery"]],["timer",2]]],
+["🎮","Play online games together","Try trivia, online escape rooms, Minecraft or couples’ question games.",["Pick one game and make sure both can access it","Play for 45 minutes","Loser picks the next date idea"],[["ideas","Couples question",["What’s your favorite memory of us?","What did you first notice about me?","What’s one thing you want us to try in 2027?","What makes you feel most loved?","Which trip should we take next?"]],["links",[S("free online escape room for two"),S("online trivia game for couples"),S("minecraft christmas map")]]]],
+["🔎","Christmas scavenger hunt","Give each other 10 things to find around the house, such as something red, something sparkly or something that reminds you of each other.",["Write 10 items each, then swap lists","Set a 5 minute timer and go","Show your finds and explain the “reminds me of you” one"],[["timer",5],["count",10,"items found"]]],
+["🎨","Christmas drawing","Draw a Christmas scene together or draw each other, then compare.",["Pick a theme: our first Christmas, the perfect cozy room…","Draw for 15 minutes","Reveal on camera at the same time"],[["timer",15],["links",[S("online drawing board draw together")]]]],
+["📖","Read together silently","Choose a book, get comfortable and read for 30 minutes while staying on video call.",["Pick a book each, or one to share","Mute and stay on camera","Share one favorite line at the end"],[["timer",30]]],
+["🏆","Our relationship awards","Create funny awards for each other, such as “Best Hug Giver”, “Biggest Sleepyhead” and “Most Likely to Make Me Laugh”.",["Invent 5 awards each","Reveal them one by one with a drumroll","Make certificates if you feel fancy"],[["ideas","Award ideas",["Best Hug Giver","Biggest Sleepyhead","Most Likely to Make Me Laugh","Best Snack Chooser","Worst Singer, Best Singer","Most Likely to Text Back in 1 Second"]]]],
+["🗓️","The year in review","Each choose your top five moments from the year and explain why they were special.",["Write your five moments","Take turns, one at a time","Find the moments you both picked"],[["note","Our shared top moment"]]],
+["📝","Make a 2027 bucket list","Dream up what you want to do, see and try together next year.",["Each write 10 ideas","Merge them into one list of 15","Pick one thing to do in the first month"],[["note","Our 2027 bucket list"]]],
+["👅","Christmas tongue twister competition","Read each twister fast three times in a row and score the mistakes.",["Take turns picking a twister","Three clean tries wins a point","The loser does a forfeit"],[["twist",["Santa’s sleigh slid sideways, slowly sliding sixty sleepy snowmen.","Frosty’s frozen fingers fumbled five fluffy flakes.","Rudolph’s red nose rushes round rooftops rapidly.","Peppermint penguins prepare perfectly plump plum puddings.","Three thick tinsel trees twinkle together."]]]],
+["🧠","Learn something new together","Choose something neither of you knows how to do, such as chess, origami or a new language, and learn the basics together.",["Pick the skill with the picker","Watch one beginner tutorial at the same time","Practice for 30 minutes and show each other your results"],[["ideas","Skill picker",["Chess basics","Origami crane","10 phrases in a new language","A simple card trick","Basic sign language","Knot tying","Drawing a cartoon face"]],["links",[S("chess basics for beginners"),S("origami crane tutorial"),S("learn 10 phrases in a new language")]],["timer",30]]],
+["💌","Write each other a romantic personalized Christmas letter","Write something just for your partner, from the heart.",["Think of a memory only the two of you share","Write what you love and what you promise","Keep it sealed and read it on the 24th"],[["note","The first line of my letter"]]],
+["🙏","The gratitude game","Take turns naming things you’re thankful for about your partner, your marriage and your life together.",["Take turns, one each","Go around for 10 minutes","Close with a hug (even through the screen)"],[["timer",10],["count",20,"things named"]]],
+["🕊️","Pray over your future together","Spend time praying over your future together.",["Settle somewhere quiet","Take turns praying for the year ahead","Write down what you pray for"],[["note","What we prayed for"]]],
+["⭐","Read the Christmas story together","Read Luke 1–2 and Matthew 1–2, taking turns reading and discussing the passages.",["Read Luke 1–2 first, one paragraph each","Then Matthew 1–2","Discuss: what stands out to you this year?"],[["links",[S("Luke 1-2 Bible"),S("Matthew 1-2 Bible")]],["note","What stood out"]]],
+["🎅","Do our Christmas tradition","Today is the day. Do the tradition you created on December 1.",["Gather what you need","Call and do the tradition together","Take a picture to start the memory"],[["note","How it went"]]]
+];
+const WIDE=[1,6,12,17,20,24];
+const $=s=>document.querySelector(s);
+const grid=$("#grid"),peek=$("#peek"),dlg=$("#dlg");
+let opened=new Set(),data={},cur=0,iv=null;
+try{data=JSON.parse(localStorage.getItem("advent-data")||"{}")}catch(e){}
+const save=()=>{try{localStorage.setItem("advent-open",JSON.stringify([...opened]));localStorage.setItem("advent-data",JSON.stringify(data))}catch(e){}};
+// Start every page visit with all doors closed; keep the saved memories.
+opened.clear();save();
+const now=new Date();
+const unlocked=d=>now.getFullYear()>2026||(now.getFullYear()===2026&&now.getMonth()===11&&d<=now.getDate());
+const isToday=d=>now.getFullYear()===2026&&now.getMonth()===11&&d===now.getDate();
+const days=Math.ceil((new Date(2026,11,24)-now)/864e5);
+$("#cd").textContent=days>0?`${days} days until Christmas Eve`:days===0?"It’s Christmas Eve! 🎅":"Merry Christmas!";
+const L=$("#lights");for(let i=0;i<30;i++)L.appendChild(document.createElement("span")).className="bulb";
+
+D.forEach((a,i)=>{
+  const d=i+1,c=document.createElement("div");
+  c.className="cell v"+(i%4)+(WIDE.includes(d)?" wide":"");c.id="d"+d;
+  c.innerHTML=`<button class="inside" type="button" aria-label="Details for day ${d}"><span class="day">${d}</span><span class="em" aria-hidden="true">${a[0]}</span><h3>${a[1]}</h3><p>${a[2]}</p><span class="more">Details & tools ›</span><span class="tick"></span></button>
+  <button class="door" type="button" aria-label="Open door ${d}"><span class="n">${d}</span><span class="orn" aria-hidden="true">❄ ✦ ❄</span><i class="knob"></i><span class="lock" aria-hidden="true"></span></button>`;
+  c.querySelector(".door").addEventListener("click",e=>tryOpen(d,e));
+  c.querySelector(".inside").addEventListener("click",()=>showDay(d));
+  grid.appendChild(c);
+});
+const canOpen=d=>peek.checked||unlocked(d);
+function tryOpen(d,e){
+  if(!canOpen(d)){const c=$("#d"+d);c.classList.remove("shake");void c.offsetWidth;c.classList.add("shake");toast(`Door ${d} opens on December ${d}. Switch on “Open any door” to peek.`);return}
+  opened.add(d);save();render();burst(e?e.clientX:innerWidth/2,e?e.clientY:innerHeight/2);chime();setTimeout(()=>showDay(d),850);
+}
+function render(){
+  D.forEach((_,i)=>{
+    const d=i+1,c=$("#d"+d);
+    c.classList.toggle("open",opened.has(d));
+    c.classList.toggle("today",isToday(d)&&!opened.has(d));
+    const lock=!canOpen(d)&&!opened.has(d);
+    c.classList.toggle("locked",lock);
+    c.querySelector(".lock").textContent=lock?"🔒":"";
+    c.querySelector(".tick").textContent=(data[d]&&data[d].done)?"✅":"";
+  });
+  const dn=Object.values(data).filter(x=>x.done).length;
+  $("#count").textContent=`${opened.size} of 24 doors open`;
+  $("#done").textContent=`${dn} done together`;
+  $("#fill").style.width=(opened.size/24*100)+"%";extras();
+}
+peek.addEventListener("change",render);
+$("#reset").addEventListener("click",()=>{opened.clear();save();render();toast("All doors are closed again. Your notes are kept.")});
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),2800)}
+function burst(x,y){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  for(let i=0;i<16;i++){
+    const s=document.createElement("span");s.className="pop";s.textContent=["✨","❄️","🎄","⭐","❤️"][i%5];s.style.left=x+"px";s.style.top=y+"px";document.body.appendChild(s);
+    const a=Math.random()*6.28,r=60+Math.random()*120;
+    s.animate([{transform:"translate(0,0) scale(.6)",opacity:1},{transform:`translate(${Math.cos(a)*r}px,${Math.sin(a)*r+60}px) scale(1.2)`,opacity:0}],{duration:1100,easing:"ease-out"}).onfinish=()=>s.remove();
+  }
+}
+function showDay(d){
+  clearInterval(iv);cur=d;const a=D[d-1];data[d]=data[d]||{};
+  $("#dbody").innerHTML=`<div class="dt">December ${d}</div><h2>${a[1]}</h2><p class="d">${a[2]}</p><h4>How to do it</h4><ol>${a[3].map(s=>`<li>${s}</li>`).join("")}</ol><div id="ws"></div>
+  <label class="switch" style="margin-top:1.1rem"><input type="checkbox" id="dn" ${data[d].done?"checked":""}> Done together</label>
+  <h4>Our memory from today</h4><textarea id="mem" placeholder="What made today special?">${data[d].mem||""}</textarea>
+  <div class="row" style="margin-top:.8rem"><button class="ghost" id="prev" type="button">‹ Prev</button><button class="ghost" id="next" type="button">Next ›</button><button class="ghost" id="shut" type="button">Close this door</button></div>`;
+  const ws=$("#ws");a[4].forEach(w=>ws.appendChild(widget(w,d)));ws.appendChild(tools(d));
+  $("#dn").onchange=e=>{data[d].done=e.target.checked;save();render();if(e.target.checked){toast("Yay! Another memory made ♥");burst(innerWidth/2,innerHeight/2)}};
+  $("#mem").oninput=e=>{data[d].mem=e.target.value;save()};
+  $("#prev").onclick=()=>d>1&&opened.has(d-1)?showDay(d-1):toast("Open the previous door first");
+  $("#next").onclick=()=>d<24&&opened.has(d+1)?showDay(d+1):toast("Open the next door first");
+  $("#shut").onclick=()=>{opened.delete(d);save();render();dlg.close()};
+  if(!dlg.open)dlg.showModal();
+}
+$("#close").onclick=()=>dlg.close();
+dlg.addEventListener("close",()=>clearInterval(iv));
+dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
+const fmt=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(Math.floor(s%60)).padStart(2,"0");
+function widget(w,d){
+  const b=document.createElement("div");b.className="box";const t=w[0];
+  if(t==="ideas"){
+    b.innerHTML=`<b>${w[1]}</b><div class="big">Tap shuffle 👇</div><button class="ghost gold" type="button">🎲 Shuffle</button>`;
+    b.querySelector("button").onclick=()=>b.querySelector(".big").textContent=w[2][Math.floor(Math.random()*w[2].length)];
+  }else if(t==="links"){
+    b.innerHTML=`<b>Helpful searches</b><div class="row" style="margin-top:.6rem">${w[1].map(l=>`<a class="lnk" target="_blank" rel="noopener" href="${l[1]}">🔎 ${decodeURIComponent(l[1].split("q=")[1])}</a>`).join("")}</div>`;
+  }else if(t==="note"){
+    const k="n"+w[1];data[d][k]=data[d][k]||"";
+    b.innerHTML=`<b>${w[1]}</b><textarea>${data[d][k]}</textarea>`;
+    b.querySelector("textarea").oninput=e=>{data[d][k]=e.target.value;save()};
+  }else if(t==="timer"){
+    let left=w[1]*60,run=false;
+    b.innerHTML=`<b>Timer</b><div class="clock">${fmt(left)}</div><div class="row"><button class="ghost gold" type="button">Start</button><button class="ghost" type="button">Reset</button></div>`;
+    const clk=b.querySelector(".clock"),[go,rs]=b.querySelectorAll("button");
+    go.onclick=()=>{if(run){clearInterval(iv);run=false;go.textContent="Resume";return}run=true;go.textContent="Pause";iv=setInterval(()=>{left--;clk.textContent=fmt(Math.max(left,0));if(left<=0){clearInterval(iv);run=false;go.textContent="Start";toast("⏰ Time’s up!");burst(innerWidth/2,innerHeight/2)}},1000)};
+    rs.onclick=()=>{clearInterval(iv);run=false;left=w[1]*60;clk.textContent=fmt(left);go.textContent="Start"};
+  }else if(t==="count"){
+    let n=0;b.innerHTML=`<b>Score keeper</b><div class="clock">0 / ${w[1]}</div><div class="row"><button class="ghost gold" type="button">+1 ${w[2]}</button><button class="ghost" type="button">−1</button></div>`;
+    const c=b.querySelector(".clock"),[p,m]=b.querySelectorAll("button");
+    p.onclick=()=>{n=Math.min(n+1,w[1]);c.textContent=n+" / "+w[1];if(n===w[1]){toast("🎉 Target reached!");burst(innerWidth/2,innerHeight/2)}};
+    m.onclick=()=>{n=Math.max(n-1,0);c.textContent=n+" / "+w[1]};
+  }else if(t==="race"){
+    let t0=0,res=[];b.innerHTML=`<b>Puzzle race</b><div class="clock">00:00</div><div class="row"><button class="ghost gold" type="button">Start both</button><button class="ghost" type="button">I finished!</button><button class="ghost" type="button">Partner finished!</button></div><p class="d" style="margin:.6rem 0 0"></p>`;
+    const clk=b.querySelector(".clock"),[go,me,pt]=b.querySelectorAll("button"),out=b.querySelector("p");
+    go.onclick=()=>{clearInterval(iv);res=[];out.textContent="";t0=Date.now();iv=setInterval(()=>clk.textContent=fmt((Date.now()-t0)/1000),250)};
+    const fin=n=>()=>{if(!t0)return toast("Press Start first");res.push(n+" "+fmt((Date.now()-t0)/1000));out.textContent=res.map((r,i)=>(i?"2nd: ":"🏆 1st: ")+r).join("  ·  ");if(res.length===2)clearInterval(iv)};
+    me.onclick=fin("You");pt.onclick=fin("Partner");
+  }else if(t==="tree"){
+    const em=["🔴","⭐","🎁","🔔","💛","❄️","🍬"];let sel=em[0];
+    b.innerHTML=`<b>Quick practice tree</b> <small>(tap the tree to hang ornaments)</small><div class="pal">${em.map((e,i)=>`<button type="button" class="${i?"":"on"}">${e}</button>`).join("")}</div><div class="tree"><div class="cone"></div><div class="trunk"></div></div><button class="ghost" type="button">Clear</button>`;
+    const tr=b.querySelector(".tree");
+    b.querySelectorAll(".pal button").forEach(x=>x.onclick=()=>{b.querySelectorAll(".pal button").forEach(y=>y.classList.remove("on"));x.classList.add("on");sel=x.textContent});
+    tr.onclick=e=>{const r=tr.getBoundingClientRect(),o=document.createElement("span");o.className="o";o.textContent=sel;o.style.left=(e.clientX-r.left)+"px";o.style.top=(e.clientY-r.top)+"px";tr.appendChild(o)};
+    b.querySelector(".ghost").onclick=()=>tr.querySelectorAll(".o").forEach(x=>x.remove());
+  }else if(t==="twist"){
+    let sc=[0,0];b.innerHTML=`<b>Tongue twisters</b><div class="big">Tap “Next” to begin</div><div class="row"><button class="ghost gold" type="button">Next twister</button><button class="ghost" type="button">You +1</button><button class="ghost" type="button">Partner +1</button></div><p class="d" style="margin:.6rem 0 0">You 0 · Partner 0</p>`;
+    const [nx,a,p]=b.querySelectorAll("button"),big=b.querySelector(".big"),o=b.querySelector("p");
+    nx.onclick=()=>big.textContent=w[1][Math.floor(Math.random()*w[1].length)];
+    a.onclick=()=>{sc[0]++;o.textContent=`You ${sc[0]} · Partner ${sc[1]}`};p.onclick=()=>{sc[1]++;o.textContent=`You ${sc[0]} · Partner ${sc[1]}`};
+  }
+  return b;
+}
+let meta={};try{meta=JSON.parse(localStorage.getItem("advent-meta")||"{}")}catch(e){}
+const sm=()=>{try{localStorage.setItem("advent-meta",JSON.stringify(meta))}catch(e){}};
+meta.gifts=meta.gifts||[];let ft="all",fq="",ac;
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const NOTE=["Distance is just a number, and I’m counting every day until we’re together.","You make even a screen feel like home.","Every door in this calendar is really a reason to hear your voice.","I’m grateful for you today, tomorrow and every Christmas after.","My favorite part of December is spending it with you, wherever we are.","You are my favorite gift, no wrapping needed.","Nothing sparkles like your laugh."];
+const QS=["What’s a Christmas memory that always makes you smile?","What’s one thing you want us to do on our first Christmas in the same place?","What was your favorite gift ever, and why?","What do you love most about how we love each other?","What’s a small moment this year you’d relive?","What tradition from your childhood should we keep?","What are you most looking forward to next year?","What’s one thing I do that makes you feel loved?"];
+const CH=["Speak only in rhymes for 2 minutes.","Show your partner the coziest corner of your home.","Send each other a photo of something that’s red, right now.","Hum a Christmas song and let your partner guess it.","Give each other a compliment in a silly accent.","Take a screenshot together with funny faces.","Share a song that reminds you of your partner.","Do a 30-second dance on camera."];
+const VB=["Cozy acoustic Christmas","Classic crooners and jazz","Instrumental piano candlelight","Upbeat pop carols","Soft lo-fi snowfall","Choir and orchestra"];
+const CP=["You light up every call.","You’re the best part of my day.","Your kindness amazes me.","You make me laugh like no one else.","I admire how you care for people.","You’re beautiful inside and out.","Thank you for always showing up for me.","You make hard days softer."];
+function tone(f,t0,du){if(meta.mute)return;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type="triangle";o.frequency.value=f;o.connect(g);g.connect(ac.destination);const s=ac.currentTime+t0;g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(.2,s+.02);g.gain.exponentialRampToValueAtTime(.0001,s+du);o.start(s);o.stop(s+du+.05)}catch(e){}}
+function chime(){tone(784,0,.5);tone(1047,.15,.7)}
+function extras(){
+  let run=0,best=0,dn=0;for(let d=1;d<=24;d++){if(data[d]&&data[d].done){run++;dn++;best=Math.max(best,run)}else run=0}
+  $("#streak").textContent=`🔥 Best streak: ${best} day${best===1?"":"s"}`;
+  const bd=[["🚪","First door",opened.size>=1],["💞","3 done together",dn>=3],["🌗","Halfway (12 open)",opened.size>=12],["🏆","All 24 done",dn>=24]];
+  $("#badges").innerHTML=bd.map(b=>`<span style="opacity:${b[2]?1:.35}">${b[0]} ${b[1]}</span>`).join(" · ");
+  D.forEach((a,i)=>{const d=i+1,dd=data[d]&&data[d].done;let ok=ft==="all"||(ft==="done"?dd:!dd);if(fq&&!(a[1]+" "+a[2]).toLowerCase().includes(fq))ok=false;$("#d"+d).style.display=ok?"":"none"});
+  const inDec=now.getFullYear()===2026&&now.getMonth()===11;
+  const tb=$("#today");
+  if(inDec&&now.getDate()<=24){tb.textContent=`📍 Today is door ${now.getDate()}`;tb.onclick=()=>$("#d"+now.getDate()).scrollIntoView({block:"center"})}
+  else if(now<new Date(2026,11,1)){tb.textContent=`⏳ Door 1 opens in ${Math.ceil((new Date(2026,11,1)-now)/864e5)} days`;tb.onclick=()=>$("#d1").scrollIntoView({block:"center"})}
+  else{tb.textContent="🎄 All doors are ready";tb.onclick=null}
+  $("#for").textContent=meta.n1&&meta.n2?`A calendar for ${meta.n1} & ${meta.n2} ♥`:"";
+  if(opened.size>=12&&!meta.half){meta.half=1;sm();toast("🌗 Halfway there! 12 doors open.")}
+  if(opened.size===24&&!meta.fin){meta.fin=1;sm();setTimeout(()=>{for(let k=0;k<6;k++)setTimeout(()=>burst(Math.random()*innerWidth,Math.random()*innerHeight*.7),k*250);toast("🎉 All 24 doors opened! Merry Christmas!");tone(523,0,.4);tone(659,.3,.4);tone(784,.6,.8)},900)}
+}
+function tools(d){
+  const a=D[d-1];data[d]=data[d]||{};const x=data[d],b=document.createElement("div");b.className="box";
+  const n1=meta.n1||"You",n2=meta.n2||"Partner";
+  const calStart=new Date(Date.UTC(2026,11,d)),calEnd=new Date(Date.UTC(2026,11,d+1)),ymd=v=>v.toISOString().slice(0,10).replace(/-/g,"");
+  const cal="https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent("Advent door "+d+": "+a[1])+"&dates="+ymd(calStart)+"/"+ymd(calEnd);
+  b.innerHTML=`<b>✨ Extra fun</b><div class="hearts" style="margin-top:.5rem"></div><div class="row pal mo"></div><div class="big out" style="font-size:1.05rem">Tap a button for an idea</div><div class="row tb"></div><div class="row" style="margin-top:.7rem"><a class="lnk" target="_blank" rel="noopener" href="${cal}">📅 Add to Google Calendar</a><button class="ghost inv" type="button">📋 Copy invite</button></div>`;
+  const hr=b.querySelector(".hearts"),mo=b.querySelector(".mo"),out=b.querySelector(".out"),tb=b.querySelector(".tb");
+  const paintH=()=>{hr.innerHTML="Rate this day: "+[1,2,3,4,5].map(n=>`<button type="button" aria-label="${n} hearts">${n<=(x.rate||0)?"♥":"♡"}</button>`).join("");hr.querySelectorAll("button").forEach((bt,i)=>bt.onclick=()=>{x.rate=i+1;save();paintH()})};paintH();
+  mo.innerHTML="<span style='font-size:.9rem'>Mood:</span> "+["😍","😂","🥰","😴","🤔"].map(m=>`<button type="button" class="${x.mood===m?"on":""}">${m}</button>`).join("");
+  mo.querySelectorAll("button").forEach(bt=>bt.onclick=()=>{x.mood=bt.textContent;save();mo.querySelectorAll("button").forEach(y=>y.classList.toggle("on",y===bt))});
+  let lit=false;
+  [["💬 Conversation starter",()=>pick(QS)],["⚡ Bonus challenge",()=>pick(CH)],["🎵 Soundtrack vibe",()=>"🎵 "+pick(VB)],["🪙 Who goes first?",()=>"🪙 "+pick([n1,n2])+" goes first!"],["🎲 Roll a die",()=>"🎲 You rolled a "+(1+Math.floor(Math.random()*6))],["💝 Compliment",()=>pick(CP)],["🕯️ Candle",()=>(lit=!lit)?"🕯️🔥 A candle is lit. Take a quiet moment together.":"🕯️💨 Candle blown out."]].forEach(([l,f])=>{const bt=document.createElement("button");bt.className="ghost";bt.type="button";bt.textContent=l;bt.onclick=()=>out.textContent=f();tb.appendChild(bt)});
+  b.querySelector(".inv").onclick=()=>{const t=`${n1=="You"?"":n1+": "}Tonight’s door is “${a[1]}”. ${a[2]} Free to call?`;try{navigator.clipboard.writeText(t).then(()=>toast("Invite copied. Paste it to your partner!"),()=>toast(t))}catch(e){toast(t)}};
+  return b;
+}
+$("#n1").value=meta.n1||"";$("#n2").value=meta.n2||"";
+$("#n1").oninput=e=>{meta.n1=e.target.value;sm();extras()};$("#n2").oninput=e=>{meta.n2=e.target.value;sm();extras()};
+$("#q").oninput=e=>{fq=e.target.value.toLowerCase().trim();extras()};$("#ft").onchange=e=>{ft=e.target.value;extras()};
+const nl=()=>$("#lnote").textContent="“"+pick(NOTE)+"”";nl();$("#nl").onclick=nl;
+$("#jing").onclick=()=>{if(meta.mute)return toast("Sound is off");const n=[[329.63,.5],[329.63,.5],[329.63,1],[329.63,.5],[329.63,.5],[329.63,1],[329.63,.5],[392,.5],[261.63,.5],[293.66,.5],[329.63,1.5]];let t=0;n.forEach(([f,u])=>{tone(f,t*.3,u*.3);t+=u})};
+const setBtn=()=>{$("#sndT").textContent=meta.mute?"🔇 Sound off":"🔊 Sound on"};setBtn();
+$("#sndT").onclick=()=>{meta.mute=!meta.mute;sm();setBtn()};
+const sn=()=>{$("#snow").style.display=meta.nosnow?"none":"";$("#snowT").textContent=meta.nosnow?"☀️ Snow off":"❄️ Snow on"};sn();$("#snowT").onclick=()=>{meta.nosnow=!meta.nosnow;sm();sn()};
+const cm=()=>{document.body.classList.toggle("calm",!!meta.calm);$("#calmT").textContent=meta.calm?"🕊️ Calm: on":"🕊️ Calm mode"};cm();$("#calmT").onclick=()=>{meta.calm=!meta.calm;sm();cm()};
+const tx=()=>{document.documentElement.style.fontSize=meta.big?"120%":""};tx();$("#txtT").onclick=()=>{meta.big=!meta.big;sm();tx()};
+$("#copyAll").onclick=()=>{const t=D.map((a,i)=>{const x=data[i+1];return x&&(x.mem||x.done||x.rate)?`Dec ${i+1}: ${a[1]}${x.done?" ✓":""}${x.rate?" "+"♥".repeat(x.rate):""}${x.mood?" "+x.mood:""}${x.mem?"\n  "+x.mem:""}`:""}).filter(Boolean).join("\n");if(!t)return toast("No memories yet. Complete a door first!");try{navigator.clipboard.writeText(t).then(()=>toast("All memories copied!"),()=>toast("Couldn’t copy"))}catch(e){toast("Couldn’t copy")}};
+const ZN=[["Europe/Bucharest","Romania"],["Europe/London","London"],["Europe/Paris","Paris"],["America/New_York","Jacksonville"],["America/Chicago","Chicago"],["America/Los_Angeles","Los Angeles"],["Asia/Dubai","Dubai"],["Asia/Tokyo","Tokyo"],["Australia/Sydney","Sydney"]];
+["z1","z2"].forEach((id,k)=>{const s=$("#"+id);s.innerHTML=ZN.map(z=>`<option value="${z[0]}">${z[1]}</option>`).join("");s.value=meta[id]||ZN[k?3:0][0];s.onchange=()=>{meta[id]=s.value;sm();clk()}});
+function clk(){const f=z=>new Intl.DateTimeFormat([],{timeZone:z,hour:"2-digit",minute:"2-digit"}).format(new Date()),o=z=>{const p=new Date(new Date().toLocaleString("en-US",{timeZone:z}));return p-new Date(new Date().toLocaleString("en-US"))};const a=$("#z1").value,b=$("#z2").value;$("#t1").textContent=f(a);$("#t2").textContent=f(b);const h=Math.round((o(b)-o(a))/36e5);$("#zd").textContent=h===0?"Same time zone. Easy calls!":`Your partner is ${Math.abs(h)}h ${h>0?"ahead":"behind"}. Pick a time that works for both.`}
+clk();setInterval(clk,30000);
+function gl(){$("#gl").innerHTML=meta.gifts.map((g,i)=>`<li><label><input type="checkbox" ${g.d?"checked":""} data-i="${i}"> ${g.t.replace(/</g,"&lt;")}</label><button type="button" data-x="${i}" aria-label="Remove">✕</button></li>`).join("")||"<small>Nothing yet. Add ideas for each other.</small>";$("#gl").querySelectorAll("input").forEach(c=>c.onchange=()=>{meta.gifts[c.dataset.i].d=c.checked;sm()});$("#gl").querySelectorAll("button").forEach(c=>c.onclick=()=>{meta.gifts.splice(c.dataset.x,1);sm();gl()})}
+const ga=()=>{const v=$("#gi").value.trim();if(!v)return;meta.gifts.push({t:v});$("#gi").value="";sm();gl()};$("#ga").onclick=ga;$("#gi").onkeydown=e=>{if(e.key==="Enter")ga()};gl();
+addEventListener("keydown",e=>{if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;if(dlg.open){if(e.key==="ArrowRight")$("#next").click();if(e.key==="ArrowLeft")$("#prev").click()}});
+render();
+(()=>{
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  const cv=$("#snow"),x=cv.getContext("2d");let W,H,f=[];
+  const size=()=>{W=cv.width=innerWidth;H=cv.height=innerHeight};size();addEventListener("resize",size);
+  for(let i=0;i<80;i++)f.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*2.6+.6,s:Math.random()*.8+.3,o:Math.random()*.5+.25,p:Math.random()*6});
+  (function loop(){x.clearRect(0,0,W,H);for(const s of f){s.y+=s.s;s.p+=.01;s.x+=Math.sin(s.p)*.4;if(s.y>H+5){s.y=-5;s.x=Math.random()*W}x.beginPath();x.arc(s.x,s.y,s.r,0,6.283);x.fillStyle=`rgba(255,255,255,${s.o})`;x.fill()}requestAnimationFrame(loop)})();
+})();
+</script>
+</body>
+</html>
