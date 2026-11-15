@@ -153,7 +153,7 @@ footer .tips{max-width:36rem;margin:0 auto 1rem;line-height:1.6}
 const S=q=>["search","https://www.google.com/search?q="+encodeURIComponent(q)];
 const D=[
 ["🌟","Create our yearly tradition","Invent one Christmas tradition that you will do together every year on the 24th, and write it down.",["Each of you suggests two ideas","Pick the one that works both far apart and together","Decide when, what you need and who prepares what","Write it in the box below so you can repeat it every year"],[["ideas","Need inspiration?",["Open one gift at midnight on video","Cook the same dish and eat together","Read a favorite passage and light a candle","Record a yearly video message","Take a matching photo each year","Call at sunset and share a toast"]],["note","Our tradition, written down"]]],
-["🎄","Decorate a 3D Christmas tree together","Pick a 3D tree decorator, share your screen or decorate side by side, and compare your trees.",["Search for an online 3D tree decorator you both like","Open it at the same time and share your screens","Take turns adding one decoration each","Screenshot both trees and vote on a winner"],[["links",[S("online 3D christmas tree decorator"),S("free christmas tree decorating game browser")]],["tree"]]],
+["🎄","Decorate a 3D Christmas tree together","Open the 3D Christmas tree decorator cvreated by Alessia, join a room together and have fun personalizing your own little tree! Same picture, same tree, different screens.",["Open the page","Add decorations together","Screenshot the tree and add it to the shared drive!"],[["links",[S("Decorate our Christmas tree now!!")]],["tree"]]],
 ["🧩","Complete the same Christmas puzzle","Pick a digital puzzle and race to finish it together. Same picture, same piece count, different screens.",["Choose a puzzle size (100 pieces is a good start)","Open the same puzzle in a free online jigsaw site","Hit start on the stopwatch at the same moment","Press your button when you finish and compare times"],[["links",[S("free online christmas jigsaw puzzle"),S("online jigsaw puzzle play together")]],["race"]]],
 ["📷","Look through old pictures","Scroll through old photos together and tell the stories behind them.",["Each pick five photos that mean something","Share your screen and take turns telling the story","Ask: what do you remember that I don’t?"],[["note","Favorite memory we rediscovered"]]],
 ["🍪","Bake Christmas cookies","Bake cookies together on video. Same recipe, two kitchens, one verdict.",["Agree on a recipe and a shopping list","Cook on camera and swap tips","Taste-test and rate each other’s cookies out of 10"],[["links",[S("easy christmas cookie recipe"),S("gingerbread cookie recipe")]],["timer",12]]],
@@ -255,8 +255,7 @@ function widget(w,d){
     b.innerHTML=`<b>${w[1]}</b><div class="big">Tap shuffle 👇</div><button class="ghost gold" type="button">🎲 Shuffle</button>`;
     b.querySelector("button").onclick=()=>b.querySelector(".big").textContent=w[2][Math.floor(Math.random()*w[2].length)];
   }else if(t==="links"){
-    b.innerHTML=`<b>Helpful searches</b><div class="row" style="margin-top:.6rem">${w[1].map(l=>`<a class="lnk" target="_blank" rel="noopener" href="${l[1]}">🔎 ${decodeURIComponent(l[1].split("q=")[1])}</a>`).join("")}</div>`;
-  }else if(t==="note"){
+b.innerHTML=`<b>Decorate the tree!</b><div class="row" style="margin-top:.6rem"><a class="lnk" href="tree.html">🎄 Decorate the tree</a></div>`;  }else if(t==="note"){
     const k="n"+w[1];data[d][k]=data[d][k]||"";
     b.innerHTML=`<b>${w[1]}</b><textarea>${data[d][k]}</textarea>`;
     b.querySelector("textarea").oninput=e=>{data[d][k]=e.target.value;save()};
