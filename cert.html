@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Christmas Award Certificate Maker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Pacifico&family=Playfair+Display:wght@400;700&family=Cinzel:wght@400;700&family=Dancing+Script:wght@400;700&family=Lobster&family=Merriweather:wght@400;700&family=Quicksand:wght@400;700&family=Caveat:wght@400;700&family=Fredericka+the+Great&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,sans-serif;background:#1b2a22;color:#f4f1ea}
+header{padding:14px 20px;background:#7a1020;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+header h1{font-size:20px;margin:0 auto 0 0}
+button,select,input,textarea{font:inherit}
+button{background:#c9a227;color:#222;border:0;border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer}
+button.alt{background:#2f5d46;color:#fff}
+button:hover{filter:brightness(1.1)}
+main{display:grid;grid-template-columns:380px 1fr;gap:16px;padding:16px}
+#panel{max-height:calc(100vh - 90px);overflow:auto;padding-right:6px}
+details{background:#243b30;border-radius:10px;margin-bottom:8px;padding:8px 12px}
+summary{cursor:pointer;font-weight:700}
+label{display:block;font-size:12px;margin:8px 0 2px;opacity:.85}
+input[type=text],textarea,select{width:100%;padding:6px;border-radius:6px;border:1px solid #456;background:#fff;color:#111}
+input[type=color]{width:100%;height:32px;border:0;padding:0}
+input[type=range]{width:100%}
+.row{display:flex;gap:6px;flex-wrap:wrap}
+.themes button{flex:1 1 40%}
+#stageWrap{position:sticky;top:10px;align-self:start}
+#stage{width:100%;overflow:hidden;border-radius:6px;box-shadow:0 8px 30px #0008}
+#batch div{display:flex;justify-content:space-between;padding:4px 0;font-size:13px}
+.cert{position:relative;overflow:hidden;transform-origin:0 0}
+.cert .layer{position:absolute;inset:0}
+.cert .main{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;z-index:2}
+.cert .abs{position:absolute;z-index:3}
+@media(max-width:900px){main{grid-template-columns:1fr}#panel{max-height:none}#stageWrap{position:static;order:-1}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎄 Christmas Award Certificate Maker</h1>
+  <button onclick="downloadOne()">⬇ Download PDF</button>
+  <button class="alt" onclick="addBatch()">＋ Add to batch</button>
+  <button class="alt" onclick="downloadBatch()">⬇ Batch PDF</button>
+</header>
+<main>
+  <div id="panel"></div>
+  <div id="stageWrap">
+    <div id="stage"></div>
+    <p style="font-size:12px;opacity:.7">Live preview. The PDF is rendered at full size.</p>
+    <details open><summary>Batch (<span id="bc">0</span> certificates)</summary><div id="batch"></div></details>
+  </div>
+</main>
+
+<script>
+const FONTS=['Great Vibes','Pacifico','Playfair Display','Cinzel','Dancing Script','Lobster','Merriweather','Quicksand','Caveat','Fredericka the Great'];
+const DIVS=['line','dots','ornament','stars','hearts','none'];
+// [key,label,type,default,options]  types: text, area, sel, col, rng, chk, file
+const SEC={
+'✍️ Text':[
+ ['title','Certificate title','text','Certificate of Awesomeness'],
+ ['pre','"Presented to" line','text','This award is proudly presented to'],
+ ['name','Recipient','text','My Favorite Human'],
+ ['award','Award name','text','Most Likely to Make Me Laugh'],
+ ['desc','Description','area','For reliably turning every bad day into a good one with one goofy face.'],
+ ['from','From','text','Your Partner in Crime'],
+ ['sigLabel','Signature label','text','Signed with love'],
+ ['date','Date','text','December 15, 2026'],
+ ['foot','Footer message','text','Valid on all 24 nights, on both screens 💕'],
+ ['ribbon','Corner ribbon text','text','Official']],
+'🔤 Fonts & type':[
+ ['titleFont','Title font','sel','Cinzel',FONTS],
+ ['nameFont','Recipient font','sel','Great Vibes',FONTS],
+ ['awardFont','Award font','sel','Playfair Display',FONTS],
+ ['bodyFont','Body font','sel','Merriweather',FONTS],
+ ['sigFont','Signature font','sel','Dancing Script',FONTS],
+ ['titleSize','Title size','rng',48,[20,90,1]],
+ ['nameSize','Recipient size','rng',72,[24,130,1]],
+ ['awardSize','Award size','rng',36,[16,70,1]],
+ ['bodySize','Body size','rng',18,[10,34,1]],
+ ['letterSp','Title letter spacing','rng',4,[0,16,1]],
+ ['lineH','Line height','rng',1.5,[1,2.2,0.05]],
+ ['upper','UPPERCASE title','chk',true],
+ ['tShadow','Text shadow','chk',false],
+ ['align','Text alignment','sel','center',['center','left','right']]],
+'🎨 Colors':[
+ ['bg1','Background colour 1','col','#fffaf0'],
+ ['bg2','Background colour 2','col','#f6e7c1'],
+ ['angle','Gradient angle','rng',135,[0,360,5]],
+ ['titleC','Title colour','col','#9b1423'],
+ ['nameC','Recipient colour','col','#1f5a3b'],
+ ['awardC','Award colour','col','#9b1423'],
+ ['textC','Body text colour','col','#3b2f2f'],
+ ['borderC','Border colour','col','#1f5a3b'],
+ ['accent','Accent colour','col','#c9a227']],
+'🖼️ Border & frame':[
+ ['bStyle','Border style','sel','double',['double','solid','dashed','dotted','ridge','groove']],
+ ['bWidth','Border width','rng',14,[0,40,1]],
+ ['inner','Inner frame line','chk',true],
+ ['radius','Corner radius','rng',0,[0,60,1]],
+ ['corners','Corner ornaments','chk',true],
+ ['cornerSym','Ornament symbol','sel','❄',['❄','✦','❦','✿','★','♥','🎄','🎁','🔔','🍬']],
+ ['vignette','Soft vignette shadow','chk',true]],
+'📐 Layout & pattern':[
+ ['orient','Orientation','sel','landscape',['landscape','portrait']],
+ ['paper','Paper size','sel','A4',['A4','Letter']],
+ ['pad','Content padding','rng',70,[30,140,2]],
+ ['pattern','Background pattern','sel','snow',['none','snow','dots','stripes','checks']],
+ ['patOp','Pattern opacity','rng',0.35,[0,1,0.05]]],
+'🎅 Decorations':[
+ ['emojiTop','Top emoji row','text','🎄 ⭐ 🎄'],
+ ['emojiBottom','Bottom emoji row','text','🎁 ❤️ 🎁'],
+ ['emojiSize','Emoji size','rng',34,[12,80,1]],
+ ['divider','Divider style','sel','ornament',DIVS],
+ ['scatter','Scattered emojis','text','❄ 🎄 ⭐ ❤️'],
+ ['scatterN','Scattered emoji count','rng',14,[0,60,1]],
+ ['scatterOp','Scattered emoji opacity','rng',0.18,[0,1,0.02]],
+ ['ribbonOn','Show corner ribbon','chk',true],
+ ['ribbonC','Ribbon colour','col','#9b1423']],
+'🏅 Seal':[
+ ['seal','Show seal','chk',true],
+ ['sealText','Seal text','text','Best\nAward\n2026'],
+ ['sealShape','Seal shape','sel','star',['star','circle','square']],
+ ['sealColor','Seal colour','col','#c9a227'],
+ ['sealSize','Seal size','rng',130,[70,220,2]],
+ ['sealRot','Seal rotation','rng',-12,[-45,45,1]]],
+'📷 Photo':[
+ ['photo','Upload a photo','file',''],
+ ['photoSize','Photo size','rng',110,[40,220,2]],
+ ['photoShape','Photo shape','sel','circle',['circle','rounded','square']]],
+'📄 Export':[
+ ['quality','PDF quality (scale)','rng',2,[1,3,0.5]],
+ ['fileName','File name','text','christmas-award']]
+};
+const THEMES={
+ 'Classic Christmas':{bg1:'#fffaf0',bg2:'#f6e7c1',titleC:'#9b1423',nameC:'#1f5a3b',awardC:'#9b1423',textC:'#3b2f2f',borderC:'#1f5a3b',accent:'#c9a227',sealColor:'#c9a227',ribbonC:'#9b1423'},
+ 'Snowy Night':{bg1:'#10244a',bg2:'#27457f',titleC:'#e8f1ff',nameC:'#ffd86b',awardC:'#ffffff',textC:'#dbe7ff',borderC:'#cfe0ff',accent:'#ffd86b',sealColor:'#c9a227',ribbonC:'#c0392b'},
+ 'Candy Cane':{bg1:'#ffffff',bg2:'#ffe3e8',titleC:'#d11a3a',nameC:'#d11a3a',awardC:'#1f6b4a',textC:'#4a2b30',borderC:'#d11a3a',accent:'#1f6b4a',sealColor:'#d11a3a',ribbonC:'#1f6b4a'},
+ 'Golden Gala':{bg1:'#1a1a1a',bg2:'#3a2f12',titleC:'#f5d76e',nameC:'#ffffff',awardC:'#f5d76e',textC:'#eadfb9',borderC:'#f5d76e',accent:'#f5d76e',sealColor:'#b8860b',ribbonC:'#8b0000'},
+ 'Cozy Cocoa':{bg1:'#f3e3d0',bg2:'#d7b998',titleC:'#5b3a29',nameC:'#8a2a2a',awardC:'#5b3a29',textC:'#4a3328',borderC:'#5b3a29',accent:'#a0522d',sealColor:'#8a2a2a',ribbonC:'#2f5d46'},
+ 'Romantic Pink':{bg1:'#fff0f5',bg2:'#ffc9dc',titleC:'#b3224f',nameC:'#b3224f',awardC:'#7a1535',textC:'#5a2a3a',borderC:'#e0527f',accent:'#e0527f',sealColor:'#e0527f',ribbonC:'#7a1535'}};
+const IDEAS=[
+ ['Best Hug Giver','For hugs that fix everything in under five seconds.'],
+ ['Biggest Sleepyhead','For napping professionally, anywhere, at any time.'],
+ ['Most Likely to Make Me Laugh','For turning every bad day into a good one.'],
+ ['World\'s Okayest Chef','For meals that are always made with love (and mild chaos).'],
+ ['Snack Thief of the Year','For "just one bite" that somehow became the whole plate.'],
+ ['Professional Blanket Hogger','For stealing the covers with Olympic-level skill.'],
+ ['Best Cuddle Architect','For building the perfect nest on any couch.'],
+ ['Queen/King of Terrible Puns','For jokes that make me groan and smile at once.'],
+ ['Most Likely to Get Lost With a Map','For adventures I would never trade.'],
+ ['Gold Medal Gift Wrapper','For wrapping presents with surprising enthusiasm.'],
+ ['Best Good Morning Messages','For starting my day with a smile, every day.'],
+ ['Most Dramatic Sneezer','For sneezes that deserve their own soundtrack.']];
+
+let S={},B=[];
+const $=q=>document.querySelector(q);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nl=t=>esc(t).replace(/\n/g,'<br>');
+for(const sec in SEC)SEC[sec].forEach(d=>S[d[0]]=d[3]);
+const DEF=JSON.parse(JSON.stringify(S));
+
+function buildPanel(){
+  let h='<details open><summary>⚡ Quick tools</summary><div class="row themes" style="margin-top:8px">';
+  for(const t in THEMES)h+=`<button class="alt" onclick="theme('${t}')">${t}</button>`;
+  h+=`</div><div class="row" style="margin-top:8px"><button onclick="randomAward()">🎲 Random award</button><button onclick="shuffleColors()">🌈 Shuffle colours</button><button class="alt" onclick="saveLocal()">💾 Save</button><button class="alt" onclick="loadLocal()">📂 Load</button><button class="alt" onclick="resetAll()">↺ Reset</button></div></details>`;
+  for(const sec in SEC){
+    h+=`<details><summary>${sec}</summary>`;
+    SEC[sec].forEach(([k,l,t,def,o])=>{
+      h+=`<label for="f_${k}">${l}</label>`;
+      if(t==='text')h+=`<input type="text" id="f_${k}" data-k="${k}">`;
+      if(t==='area')h+=`<textarea id="f_${k}" data-k="${k}" rows="3"></textarea>`;
+      if(t==='sel')h+=`<select id="f_${k}" data-k="${k}">${o.map(x=>`<option>${x}</option>`).join('')}</select>`;
+      if(t==='col')h+=`<input type="color" id="f_${k}" data-k="${k}">`;
+      if(t==='rng')h+=`<input type="range" id="f_${k}" data-k="${k}" min="${o[0]}" max="${o[1]}" step="${o[2]}">`;
+      if(t==='chk')h+=`<input type="checkbox" id="f_${k}" data-k="${k}">`;
+      if(t==='file')h+=`<input type="file" id="f_${k}" data-k="${k}" accept="image/*">`;
+    });
+    h+='</details>';
+  }
+  h+='<details><summary>ℹ️ Tips</summary><p style="font-size:13px">Add each finished certificate to the batch, then download them all as one multi-page PDF.</p></details>';
+  $('#panel').innerHTML=h;
+  document.querySelectorAll('[data-k]').forEach(el=>{
+    const k=el.dataset.k;
+    el.addEventListener('input',()=>{
+      if(el.type==='checkbox')S[k]=el.checked;
+      else if(el.type==='range')S[k]=+el.value;
+      else if(el.type==='file'){const f=el.files[0];if(!f){S[k]='';render();return}const r=new FileReader();r.onload=()=>{S[k]=r.result;render()};r.readAsDataURL(f);return}
+      else S[k]=el.value;
+      render();
+    });
+  });
+  syncForm();
+}
+function syncForm(){
+  document.querySelectorAll('[data-k]').forEach(el=>{
+    const k=el.dataset.k;
+    if(el.type==='checkbox')el.checked=!!S[k];
+    else if(el.type!=='file')el.value=S[k];
+  });
+}
+function theme(n){Object.assign(S,THEMES[n]);syncForm();render()}
+function randomAward(){const a=IDEAS[Math.floor(Math.random()*IDEAS.length)];S.award=a[0];S.desc=a[1];syncForm();render()}
+function shuffleColors(){
+  const h=()=>Math.floor(Math.random()*360);const a=h();
+  const c=(hh,s,l)=>{l/=100;const k=n=>(n+hh/30)%12,aa=s*Math.min(l,1-l)/100,f=n=>l-aa*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)));const x=v=>Math.round(255*v).toString(16).padStart(2,'0');return'#'+x(f(0))+x(f(8))+x(f(4))};
+  Object.assign(S,{bg1:c(a,70,96),bg2:c(a,60,86),titleC:c(a,70,30),nameC:c((a+120)%360,60,28),awardC:c(a,70,30),textC:c(a,30,22),borderC:c((a+120)%360,55,30),accent:c((a+40)%360,70,48),sealColor:c((a+40)%360,70,48),ribbonC:c(a,70,32)});
+  syncForm();render();
+}
+function saveLocal(){try{localStorage.setItem('certS',JSON.stringify(S));alert('Saved in this browser.')}catch(e){alert('Could not save here.')}}
+function loadLocal(){try{const d=localStorage.getItem('certS');if(d){S=Object.assign({},DEF,JSON.parse(d));syncForm();render()}else alert('Nothing saved yet.')}catch(e){}}
+function resetAll(){S=JSON.parse(JSON.stringify(DEF));syncForm();render()}
+
+function dims(s){const b=s.paper==='A4'?[1123,794]:[1056,816];return s.orient==='landscape'?b:[b[1],b[0]]}
+function build(s){
+  const [W,H]=dims(s),c=document.createElement('div');c.className='cert';
+  const pats={none:'',snow:'radial-gradient(circle,#fff 3px,transparent 4px) 0 0/90px 90px,radial-gradient(circle,#fff 2px,transparent 3px) 45px 45px/70px 70px',dots:'radial-gradient(#fff 2px,transparent 2.5px) 0 0/26px 26px',stripes:'repeating-linear-gradient(45deg,rgba(255,255,255,.7) 0 10px,transparent 10px 26px)',checks:'conic-gradient(rgba(255,255,255,.6) 25%,transparent 0 50%,rgba(255,255,255,.6) 0 75%,transparent 0) 0 0/44px 44px'};
+  c.style.cssText=`width:${W}px;height:${H}px;background:linear-gradient(${s.angle}deg,${s.bg1},${s.bg2});border:${s.bWidth}px ${s.bStyle} ${s.borderC};border-radius:${s.radius}px;color:${s.textC};font-family:'${s.bodyFont}',serif;box-shadow:${s.vignette?'inset 0 0 90px rgba(0,0,0,.22)':'none'}`;
+  let h=`<div class="layer" style="background:${pats[s.pattern]};opacity:${s.patOp}"></div>`;
+  const sc=Array.from(s.scatter.replace(/\s+/g,''));
+  if(sc.length)for(let i=0;i<s.scatterN;i++){
+    const r1=((i*9301+49297)%233280)/233280,r2=((i*7919+13331)%233280)/233280,r3=((i*3571+9187)%233280)/233280;
+    h+=`<div class="layer" style="inset:auto;left:${r1*96}%;top:${r2*92}%;font-size:${20+r3*34}px;opacity:${s.scatterOp};transform:rotate(${r3*60-30}deg);line-height:1">${esc(sc[i%sc.length])}</div>`;
+  }
+  const bw=+s.bWidth;
+  if(s.inner)h+=`<div class="abs" style="inset:${bw+10}px;border:2px solid ${s.accent};border-radius:${Math.max(0,s.radius-6)}px"></div>`;
+  if(s.corners){const o=bw+16,st=`position:absolute;font-size:34px;line-height:1;color:${s.accent};`;
+    h+=`<span class="abs" style="${st}top:${o}px;left:${o}px">${s.cornerSym}</span><span class="abs" style="${st}top:${o}px;right:${o}px">${s.cornerSym}</span><span class="abs" style="${st}bottom:${o}px;left:${o}px">${s.cornerSym}</span><span class="abs" style="${st}bottom:${o}px;right:${o}px">${s.cornerSym}</span>`}
+  if(s.ribbonOn)h+=`<div class="abs" style="top:46px;left:-62px;width:250px;transform:rotate(-35deg);background:${s.ribbonC};color:#fff;text-align:center;padding:6px 0;font:700 15px 'Quicksand',sans-serif;letter-spacing:2px;text-transform:uppercase">${esc(s.ribbon)}</div>`;
+  const dv={line:`<span style="display:inline-block;width:40%;height:3px;background:${s.accent}"></span>`,dots:'• • •',ornament:'❦',stars:'✦ ✦ ✦',hearts:'♥ ♥ ♥',none:''}[s.divider];
+  const divH=dv?`<div style="margin:10px 0;color:${s.accent};font-size:26px">${dv}</div>`:'';
+  const ts=s.tShadow?'text-shadow:2px 2px 4px rgba(0,0,0,.3);':'';
+  const ph=s.photo?`<img src="${s.photo}" style="width:${s.photoSize}px;height:${s.photoSize}px;object-fit:cover;margin:8px 0;border:4px solid ${s.accent};border-radius:${s.photoShape==='circle'?'50%':s.photoShape==='rounded'?'18px':'0'};${s.align==='center'?'align-self:center':''}">`:'';
+  const emo=(t)=>t?`<div style="font-size:${s.emojiSize}px;letter-spacing:8px">${esc(t)}</div>`:'';
+  h+=`<div class="main" style="padding:${s.pad}px;text-align:${s.align};line-height:${s.lineH}">
+   ${emo(s.emojiTop)}
+   <div style="font:${s.titleSize}px '${s.titleFont}';letter-spacing:${s.letterSp}px;color:${s.titleC};${s.upper?'text-transform:uppercase;':''}${ts}">${esc(s.title)}</div>
+   ${divH}
+   <div style="font-size:${s.bodySize}px;font-style:italic">${esc(s.pre)}</div>
+   ${ph}
+   <div style="font:${s.nameSize}px '${s.nameFont}';color:${s.nameC};${ts}margin:4px 0">${esc(s.name)}</div>
+   <div style="font:700 ${s.awardSize}px '${s.awardFont}';color:${s.awardC};${ts}">${esc(s.award)}</div>
+   <div style="font-size:${s.bodySize}px;margin:10px auto;max-width:80%${s.align!=='center'?';margin-left:0;margin-right:0':''}">${nl(s.desc)}</div>
+   <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-top:14px;font-size:${s.bodySize}px">
+     <div style="text-align:center"><div style="font:${s.bodySize*2}px '${s.sigFont}';color:${s.nameC};border-bottom:2px solid ${s.accent};padding:0 24px">${esc(s.from)}</div><small>${esc(s.sigLabel)}</small></div>
+     <div style="text-align:center"><div style="border-bottom:2px solid ${s.accent};padding:0 24px">${esc(s.date)}</div><small>Date</small></div>
+   </div>
+   <div style="margin-top:12px;font-size:${s.bodySize-2}px;opacity:.85">${esc(s.foot)}</div>
+   ${emo(s.emojiBottom)}
+  </div>`;
+  if(s.seal){
+    const clip=s.sealShape==='star'?'clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);':s.sealShape==='circle'?'border-radius:50%;':'';
+    h+=`<div class="abs" style="right:${bw+40}px;bottom:${bw+40}px;width:${s.sealSize}px;height:${s.sealSize}px;background:${s.sealColor};${clip}transform:rotate(${s.sealRot}deg);display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;font:700 ${s.sealSize/8}px 'Quicksand',sans-serif;text-transform:uppercase;line-height:1.2;padding:${s.sealSize*0.2}px">${nl(s.sealText)}</div>`;
+  }
+  c.innerHTML=h;return c;
+}
+function render(){
+  const st=$('#stage'),c=build(S),[W,H]=dims(S);
+  st.innerHTML='';st.appendChild(c);
+  const k=Math.min(1,st.clientWidth/W);c.style.transform=`scale(${k})`;st.style.height=(H*k)+'px';
+}
+window.addEventListener('resize',render);
+
+async function snap(s){
+  const box=document.createElement('div');box.style.cssText='position:fixed;left:-99999px;top:0';
+  document.body.append(box);const c=build(s);box.append(c);
+  await document.fonts.ready;
+  const cv=await html2canvas(c,{scale:s.quality,useCORS:true,backgroundColor:null});
+  box.remove();return cv;
+}
+async function makePdf(list,name){
+  const {jsPDF}=window.jspdf;let doc;
+  for(let i=0;i<list.length;i++){
+    const s=list[i],land=s.orient==='landscape',mm=s.paper==='A4'?[297,210]:[279.4,215.9],w=land?mm[0]:mm[1],h=land?mm[1]:mm[0];
+    const cv=await snap(s);
+    if(i===0)doc=new jsPDF({orientation:land?'l':'p',unit:'mm',format:s.paper==='A4'?'a4':'letter'});
+    else doc.addPage(s.paper==='A4'?'a4':'letter',land?'l':'p');
+    doc.addImage(cv.toDataURL('image/jpeg',0.95),'JPEG',0,0,w,h);
+  }
+  doc.save((name||'certificate')+'.pdf');
+}
+function downloadOne(){makePdf([S],S.fileName)}
+function addBatch(){B.push(JSON.parse(JSON.stringify(S)));drawBatch()}
+function drawBatch(){
+  $('#bc').textContent=B.length;
+  $('#batch').innerHTML=B.map((b,i)=>`<div><span>${i+1}. ${esc(b.award)} → ${esc(b.name)}</span><button class="alt" onclick="B.splice(${i},1);drawBatch()">✕</button></div>`).join('');
+}
+function downloadBatch(){if(!B.length){alert('Add at least one certificate to the batch first.');return}makePdf(B,S.fileName+'-batch')}
+
+buildPanel();render();
+document.fonts.ready.then(render);
+</script>
+</body>
+</html>
