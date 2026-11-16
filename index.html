@@ -384,7 +384,7 @@ function tools(d){
   mo.innerHTML="<span style='font-size:.9rem'>Mood:</span> "+["😍","😂","🥰","😴","🤔"].map(m=>`<button type="button" class="${x.mood===m?"on":""}">${m}</button>`).join("");
   mo.querySelectorAll("button").forEach(bt=>bt.onclick=()=>{x.mood=bt.textContent;save();mo.querySelectorAll("button").forEach(y=>y.classList.toggle("on",y===bt))});
   let lit=false;
-  [["💬 Conversation starter",()=>pick(QS)],["⚡ Bonus challenge",()=>pick(CH)],["🎵 Soundtrack vibe",()=>"🎵 "+pick(VB)],["🪙 Who goes first?",()=>"🪙 "+pick([n1,n2])+" goes first!"],["🎲 Roll a die",()=>"🎲 You rolled a "+(1+Math.floor(Math.random()*6))],["💝 Compliment",()=>pick(CP)],["🕯️ Candle",()=>(lit=!lit)?"🕯️🔥 A candle is lit. Take a quiet moment together.":"🕯️💨 Candle blown out."]].forEach(([l,f])=>{const bt=document.createElement("button");bt.className="ghost";bt.type="button";bt.textContent=l;bt.onclick=()=>out.textContent=f();tb.appendChild(bt)});
+  [["💬 Conversation starter",()=>pick(QS)],["⚡ Bonus challenge",()=>pick(CH)],["🎵 Soundtrack vibe",()=>"🎵 "+pick(VB)],["🪙 Who goes first?",()=>"🪙 "+pick([n1,n2])+" goes first!"],["🎲 Roll a dice",()=>"🎲 You rolled a "+(1+Math.floor(Math.random()*6))],["💝 Compliment",()=>pick(CP)],["🕯️ Candle",()=>(lit=!lit)?"🕯️🔥 A candle is lit. Take a quiet moment together.":"🕯️💨 Candle blown out."]].forEach(([l,f])=>{const bt=document.createElement("button");bt.className="ghost";bt.type="button";bt.textContent=l;bt.onclick=()=>out.textContent=f();tb.appendChild(bt)});
   b.querySelector(".inv").onclick=()=>{const t=`${n1=="You"?"":n1+": "}Tonight’s door is “${a[1]}”. ${a[2]} Free to call?`;try{navigator.clipboard.writeText(t).then(()=>toast("Invite copied. Paste it to your partner!"),()=>toast(t))}catch(e){toast(t)}};
   return b;
 }
