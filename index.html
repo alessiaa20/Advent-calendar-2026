@@ -217,8 +217,7 @@ const D=[
 ["🔎","Christmas scavenger hunt","Give each other 10 things to find around the house, such as something red, something sparkly or something that reminds you of each other.",["Write 10 items each, then swap lists","Set a 5 minute timer and go","Show your finds and explain the “reminds me of you” one"],[["timer",5],["count",10,"items found"]]],
 ["🎨","Christmas drawing","Draw a Christmas scene together or draw each other, then compare.",["Pick a theme: our first Christmas, the perfect cozy room…","Draw for 15 minutes","Reveal on camera at the same time"],[["timer",15],["links",[S("online drawing board draw together")]]]],
 ["📖","Read together silently","Choose a book, get comfortable and read for 30 minutes while staying on video call.",["Pick a book each, or one to share","Mute and stay on camera","Share one favorite line at the end"],[["timer",30]]],
-["🏆","Our relationship awards","Create funny awards for each other, such as “Best Hug Giver”, “Biggest Sleepyhead” and “Most Likely to Make Me Laugh”.",["Invent 5 awards each","Reveal them one by one with a drumroll","Make certificates if you feel fancy"],[["ideas","Award ideas",["Best Hug Giver","Biggest Sleepyhead","Most Likely to Make Me Laugh","Best Snack Chooser","Worst Singer, Best Singer","Most Likely to Text Back in 1 Second"]]]],
-["🗓️","The year in review","Each choose your top five moments from the year and explain why they were special.",["Write your five moments","Take turns, one at a time","Find the moments you both picked"],[["note","Our shared top moment"]]],
+["🏆","Our relationship awards","Create funny awards for each other, such as “Best Hug Giver”, “Biggest Sleepyhead” and “Most Likely to Make Me Laugh”.",["Invent 5 awards each","Reveal them one by one with a drumroll","Make certificates if you feel fancy"],[["certlink"],["ideas","Award ideas",["Best Hug Giver","Biggest Sleepyhead","Most Likely to Make Me Laugh","Best Snack Chooser","Worst Singer, Best Singer","Most Likely to Text Back in 1 Second"]]]],["🗓️","The year in review","Each choose your top five moments from the year and explain why they were special.",["Write your five moments","Take turns, one at a time","Find the moments you both picked"],[["note","Our shared top moment"]]],
 ["📝","Make a 2027 bucket list","Dream up what you want to do, see and try together next year.",["Each write 10 ideas","Merge them into one list of 15","Pick one thing to do in the first month"],[["note","Our 2027 bucket list"]]],
 ["👅","Christmas tongue twister competition","Read each twister fast three times in a row and score the mistakes.",["Take turns picking a twister","Three clean tries wins a point","The loser does a forfeit"],[["twist",["Santa’s sleigh slid sideways, slowly sliding sixty sleepy snowmen.","Frosty’s frozen fingers fumbled five fluffy flakes.","Rudolph’s red nose rushes round rooftops rapidly.","Peppermint penguins prepare perfectly plump plum puddings.","Three thick tinsel trees twinkle together."]]]],
 ["🧠","Learn something new together","Choose something neither of you knows how to do, such as chess, origami or a new language, and learn the basics together.",["Pick the skill with the picker","Watch one beginner tutorial at the same time","Practice for 30 minutes and show each other your results"],[["ideas","Skill picker",["Chess basics","Origami crane","10 phrases in a new language","A simple card trick","Basic sign language","Knot tying","Drawing a cartoon face"]],["links",[S("chess basics for beginners"),S("origami crane tutorial"),S("learn 10 phrases in a new language")]],["timer",30]]],
@@ -307,10 +306,13 @@ function widget(w,d){
     b.querySelector("button").onclick=()=>b.querySelector(".big").textContent=w[2][Math.floor(Math.random()*w[2].length)];
   }else if(t==="treelink"){
     b.innerHTML=`<b>Decorate the tree!</b><div class="row" style="margin-top:.6rem"><a class="lnk" href="tree.html">🎄 Decorate the tree</a></div>`;
-    }else if(t==="puzzlelink"){
-  b.innerHTML=`<b>Puzzle</b><div class="row" style="margin-top:.6rem"><a class="lnk" href="puzzle1.html">🧩 Puzzle</a></div>`;
-}else if(t==="links"){
+  }else if(t==="puzzlelink"){
+    b.innerHTML=`<b>Puzzle</b><div class="row" style="margin-top:.6rem"><a class="lnk" href="puzzle1.html">🧩 Puzzle</a></div>`;
+  }else if(t==="certlink"){
+    b.innerHTML=`<b>Certificates</b><div class="row" style="margin-top:.6rem"><a class="lnk" href="cert.html">🏆 Certificates generator</a></div>`;
   }else if(t==="links"){
+    b.innerHTML=`<b>Useful links</b><div class="row" style="margin-top:.6rem">${w[1].map(l=>`<a class="lnk" target="_blank" rel="noopener" href="${l[1]}">🔎 ${l[2]}</a>`).join("")}</div>`;
+  }else if(t==="note"){
     b.innerHTML=`<b>Useful links</b><div class="row" style="margin-top:.6rem">${w[1].map(l=>`<a class="lnk" target="_blank" rel="noopener" href="${l[1]}">🔎 ${l[2]}</a>`).join("")}</div>`;
   }else if(t==="note"){
     const k="n"+w[1];data[d][k]=data[d][k]||"";
