@@ -313,8 +313,6 @@ function widget(w,d){
   }else if(t==="links"){
     b.innerHTML=`<b>Useful links</b><div class="row" style="margin-top:.6rem">${w[1].map(l=>`<a class="lnk" target="_blank" rel="noopener" href="${l[1]}">🔎 ${l[2]}</a>`).join("")}</div>`;
   }else if(t==="note"){
-    b.innerHTML=`<b>Useful links</b><div class="row" style="margin-top:.6rem">${w[1].map(l=>`<a class="lnk" target="_blank" rel="noopener" href="${l[1]}">🔎 ${l[2]}</a>`).join("")}</div>`;
-  }else if(t==="note"){
     const k="n"+w[1];data[d][k]=data[d][k]||"";
     b.innerHTML=`<b>${w[1]}</b><textarea>${data[d][k]}</textarea>`;
     b.querySelector("textarea").oninput=e=>{data[d][k]=e.target.value;save()};
@@ -402,7 +400,7 @@ const cm=()=>{document.body.classList.toggle("calm",!!meta.calm);$("#calmT").tex
 const tx=()=>{document.documentElement.style.fontSize=meta.big?"120%":""};tx();$("#txtT").onclick=()=>{meta.big=!meta.big;sm();tx()};
 $("#copyAll").onclick=()=>{const t=D.map((a,i)=>{const x=data[i+1];return x&&(x.mem||x.done||x.rate)?`Dec ${i+1}: ${a[1]}${x.done?" ✓":""}${x.rate?" "+"♥".repeat(x.rate):""}${x.mood?" "+x.mood:""}${x.mem?"\n  "+x.mem:""}`:""}).filter(Boolean).join("\n");if(!t)return toast("No memories yet. Complete a door first!");try{navigator.clipboard.writeText(t).then(()=>toast("All memories copied!"),()=>toast("Couldn’t copy"))}catch(e){toast("Couldn’t copy")}};
 const ZN=[["Europe/Bucharest","Romania"],["America/New_York","Jacksonville"]];
-["z1","z2"].forEach((id,k)=>{const s=$("#"+id);s.innerHTML=ZN.map(z=>`<option value="${z[0]}">${z[1]}</option>`).join("");s.value=meta[id]||ZN[k?3:0][0];s.onchange=()=>{meta[id]=s.value;sm();clk()}});
+["z1","z2"].forEach((id,k)=>{const s=$("#"+id);s.innerHTML=ZN.map(z=>`<option value="${z[0]}">${z[1]}</option>`).join("");s.value=meta[id]||ZN[k?1:0][0];s.onchange=()=>{meta[id]=s.value;sm();clk()}});
 function clk(){const f=z=>new Intl.DateTimeFormat([],{timeZone:z,hour:"2-digit",minute:"2-digit"}).format(new Date()),o=z=>{const p=new Date(new Date().toLocaleString("en-US",{timeZone:z}));return p-new Date(new Date().toLocaleString("en-US"))};const a=$("#z1").value,b=$("#z2").value;$("#t1").textContent=f(a);$("#t2").textContent=f(b);const h=Math.round((o(b)-o(a))/36e5);$("#zd").textContent=h===0?"Same time zone. Easy calls!":`Your partner is ${Math.abs(h)}h ${h>0?"ahead":"behind"}. Pick a time that works for both.`}
 clk();setInterval(clk,30000);
 function gl(){$("#gl").innerHTML=meta.gifts.map((g,i)=>`<li><label><input type="checkbox" ${g.d?"checked":""} data-i="${i}"> ${g.t.replace(/</g,"&lt;")}</label><button type="button" data-x="${i}" aria-label="Remove">✕</button></li>`).join("")||"<small>Nothing yet. Add ideas for each other.</small>";$("#gl").querySelectorAll("input").forEach(c=>c.onchange=()=>{meta.gifts[c.dataset.i].d=c.checked;sm()});$("#gl").querySelectorAll("button").forEach(c=>c.onclick=()=>{meta.gifts.splice(c.dataset.x,1);sm();gl()})}
