@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -109,6 +108,45 @@ body.calm *{animation:none!important;transition:none!important}
 footer{text-align:center;margin-top:3rem;color:#a9c4bc;font-size:.9rem}
 footer .tips{max-width:36rem;margin:0 auto 1rem;line-height:1.6}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ===== NEW: carols panel + extra interactive animations ===== */
+.carols{display:block}
+.carols h4{font-family:var(--serif);color:var(--gold2);margin-bottom:.3rem;font-size:1.15rem}
+.carols .hint{color:#a9c4bc;font-size:.88rem;margin-bottom:.7rem}
+.carols .grp{margin:.6rem 0 .2rem;color:var(--gold);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem}
+.chips .lnk{transition:transform .2s,background .2s}
+.chips .lnk:hover{transform:translateY(-3px) rotate(-1.5deg)}
+.now{margin-top:.8rem;min-height:1.6rem;font-family:var(--serif);color:var(--gold2);font-size:1.05rem}
+.eq{display:inline-flex;gap:3px;align-items:flex-end;height:18px;margin-left:.5rem;vertical-align:middle}
+.eq i{width:4px;background:var(--gold);border-radius:2px;animation:eq .8s ease-in-out infinite}
+.eq i:nth-child(2){animation-delay:.15s}.eq i:nth-child(3){animation-delay:.3s}.eq i:nth-child(4){animation-delay:.45s}
+@keyframes eq{0%,100%{height:4px}50%{height:18px}}
+.bulb{cursor:pointer;animation:twinkle 2.6s ease-in-out infinite}
+.bulb:nth-child(3n){animation-delay:.6s}.bulb:nth-child(3n+1){animation-delay:1.2s}.bulb:nth-child(5n){animation-delay:1.8s}
+@keyframes twinkle{0%,100%{opacity:1;filter:brightness(1)}50%{opacity:.55;filter:brightness(.7)}}
+.bulb.flick{animation:flick .7s}
+@keyframes flick{0%{transform:scale(1)}25%{transform:scale(1.5) rotate(-12deg);filter:brightness(2)}60%{transform:scale(.9) rotate(8deg)}100%{transform:scale(1)}}
+h1{cursor:pointer}
+h1.jump{animation:jump .8s cubic-bezier(.3,1.6,.5,1)}
+@keyframes jump{0%{transform:scale(1)}40%{transform:scale(1.07) rotate(-1.5deg)}100%{transform:scale(1)}}
+.cell:not(.open):not(.locked) .door:hover{transform:rotateY(-14deg)}
+.cell.today:not(.open) .door{animation:glow 2s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 0 3px var(--gold2),0 0 18px 3px rgba(246,217,143,.4)}50%{box-shadow:0 0 0 3px var(--gold2),0 0 38px 12px rgba(246,217,143,.75)}}
+.cell.today:not(.open) .door .orn{animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-5px) scale(1.12)}}
+.fx{position:fixed;z-index:22;pointer-events:none;will-change:transform,opacity}
+.sleigh{position:fixed;z-index:25;pointer-events:none;font-size:3rem;white-space:nowrap;left:0;top:14%}
+.tree .o{animation:sway 3s ease-in-out infinite;transform-origin:50% 0}
+@keyframes sway{0%,100%{transform:translate(-50%,-50%) rotate(-7deg)}50%{transform:translate(-50%,-50%) rotate(7deg)}}
+
+/* ===== NEW v2: in-page player + 20 effects ===== */
+button.lnk{font:inherit;font-size:.88rem;background:transparent;cursor:pointer}
+.vid{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;border:1px solid rgba(232,185,90,.4);background:#000}
+.vid iframe{position:absolute;inset:0;width:100%;height:100%}
+#carWrap{width:100%;max-width:640px;margin-top:.9rem}
+.carin{font:inherit;font-size:.9rem;color:var(--snow);background:rgba(8,25,26,.7);border:1px solid rgba(232,185,90,.35);border-radius:99px;padding:.4rem .8rem;min-width:200px;flex:1;max-width:320px}
+#fxBtns .lnk:hover{transform:translateY(-3px) scale(1.05)}
 </style>
 </head>
 <body>
@@ -134,12 +172,26 @@ footer .tips{max-width:36rem;margin:0 auto 1rem;line-height:1.6}
     <input type="text" id="n1" placeholder="Your name" aria-label="Your name"><input type="text" id="n2" placeholder="Partner’s name" aria-label="Partner name">
     <input type="text" id="q" placeholder="🔎 Search doors" aria-label="Search doors">
     <select id="ft" aria-label="Filter"><option value="all">All doors</option><option value="todo">Not done yet</option><option value="done">Done together</option></select>
-    <div class="btns"><button class="ghost" id="jing" type="button">🔔 Jingle</button><button class="ghost" id="sndT" type="button">🔊 Sound</button><button class="ghost" id="snowT" type="button">❄️ Snow</button><button class="ghost" id="calmT" type="button">🕊️ Calm mode</button><button class="ghost" id="txtT" type="button">A+ Text</button><button class="ghost" id="copyAll" type="button">📋 Copy memories</button></div>
+    <div class="btns"><button class="ghost" id="jing" type="button">🔔 Jingle</button><button class="ghost" id="sndT" type="button">🔊 Sound</button><button class="ghost" id="snowT" type="button">❄️ Snow</button><button class="ghost" id="calmT" type="button">🕊️ Calm mode</button><button class="ghost" id="txtT" type="button">A+ Text</button><button class="ghost" id="sleighT" type="button">🎅 Sleigh</button><button class="ghost" id="copyAll" type="button">📋 Copy memories</button></div>
   </section>
   <section class="bar panels">
     <div><h4>Today</h4><button class="ghost gold" id="today" type="button"></button><small id="streak" style="margin-top:.6rem"></small><small id="badges"></small><p class="lede" id="lnote" style="margin-top:.7rem;font-style:italic;font-size:.95rem"></p><button class="ghost" id="nl" type="button" style="margin-top:.5rem">💝 New love note</button></div>
     <div><h4>Our two clocks 🌍</h4><div class="row"><select id="z1" aria-label="Your time zone"></select><b id="t1"></b></div><div class="row" style="margin-top:.5rem"><select id="z2" aria-label="Partner time zone"></select><b id="t2"></b></div><small style="margin-top:.5rem" id="zd"></small></div>
     <div><h4>Gift ideas 🎁</h4><div class="row"><input type="text" id="gi" placeholder="Add an idea" aria-label="Gift idea" style="max-width:170px;font:inherit;font-size:.9rem;color:var(--snow);background:rgba(8,25,26,.7);border:1px solid rgba(232,185,90,.35);border-radius:99px;padding:.4rem .8rem"><button class="ghost" id="ga" type="button">Add</button></div><ul id="gl"></ul></div>
+  </section>
+  <section class="bar carols" aria-label="Christmas carols">
+    <h4>🎶 Christmas carols on YouTube</h4>
+    <p class="hint">Tap a song and it plays right here on the page. Press play on both screens at the same moment.</p>
+    <div class="chips" id="carEn"></div>
+    <div id="carWrap" style="display:none"><div class="vid" id="carFrame"><div id="carPlayer"></div></div><a class="lnk" id="carOpen" target="_blank" rel="noopener" href="https://www.youtube.com" style="margin-top:.6rem">↗ Open this video on YouTube</a></div>
+    <div class="row" style="margin-top:.9rem"><button class="ghost" id="carPrev" type="button">⏮ Prev</button><button class="ghost" id="carNext" type="button">Next ⏭</button><button class="ghost gold" id="carRnd" type="button">🎲 Surprise us</button></div>
+    <div class="row" style="margin-top:.7rem"><input type="text" class="carin" id="carUrl" placeholder="Paste any YouTube link" aria-label="YouTube link"><button class="ghost" id="carGo" type="button">▶ Play link</button></div>
+    <div class="now" id="carNow" aria-live="polite"></div>
+  </section>
+  <section class="bar carols" aria-label="Visual magic">
+    <h4>✨ 20 visual magic effects</h4>
+    <p class="hint">Tap any button and watch the screen come alive.</p>
+    <div class="chips" id="fxBtns"></div>
   </section>
   <main class="grid" id="grid"></main>
   <footer>
@@ -150,15 +202,15 @@ footer .tips{max-width:36rem;margin:0 auto 1rem;line-height:1.6}
 <dialog id="dlg"><button class="ghost x" id="close" type="button" aria-label="Close">✕</button><div id="dbody"></div></dialog>
 <div id="toast" role="status" aria-live="polite"></div>
 <script>
-const S=q=>["search","https://www.google.com/search?q="+encodeURIComponent(q)];
+const S=q=>["search","https://www.google.com/search?q="+encodeURIComponent(q),q];
 const D=[
 ["🌟","Create our yearly tradition","Invent one Christmas tradition that you will do together every year on the 24th, and write it down.",["Each of you suggests two ideas","Pick the one that works both far apart and together","Decide when, what you need and who prepares what","Write it in the box below so you can repeat it every year"],[["ideas","Need inspiration?",["Open one gift at midnight on video","Cook the same dish and eat together","Read a favorite passage and light a candle","Record a yearly video message","Take a matching photo each year","Call at sunset and share a toast"]],["note","Our tradition, written down"]]],
-["🎄","Decorate a 3D Christmas tree together","Open the 3D Christmas tree decorator created by Alessia, join a room together and have fun personalizing your own little tree! Same picture, same tree, different screens.",["Open the page","Add decorations together","Screenshot the tree and add it to the shared drive!"],[["links",[S("Decorate our Christmas tree now!!")]],["tree"]]],
+["🎄","Decorate a 3D Christmas tree together","Open the 3D Christmas tree decorator created by Alessia, join a room together and have fun personalizing your own little tree! Same picture, same tree, different screens.",["Open the page","Add decorations together","Screenshot the tree and add it to the shared drive!"],[["treelink"],["tree"]]],
 ["🧩","Complete the same Christmas puzzle","Pick a digital puzzle and race to finish it together. Same picture, same piece count, different screens.",["Choose a puzzle size (100 pieces is a good start)","Open the same puzzle in a free online jigsaw site","Hit start on the stopwatch at the same moment","Press your button when you finish and compare times"],[["links",[S("free online christmas jigsaw puzzle"),S("online jigsaw puzzle play together")]],["race"]]],
 ["📷","Look through old pictures","Scroll through old photos together and tell the stories behind them.",["Each pick five photos that mean something","Share your screen and take turns telling the story","Ask: what do you remember that I don’t?"],[["note","Favorite memory we rediscovered"]]],
 ["🍪","Bake Christmas cookies","Bake cookies together on video. Same recipe, two kitchens, one verdict.",["Agree on a recipe and a shopping list","Cook on camera and swap tips","Taste-test and rate each other’s cookies out of 10"],[["links",[S("easy christmas cookie recipe"),S("gingerbread cookie recipe")]],["timer",12]]],
 ["🎬","Christmas movie night","Pick a film, press play at the same moment and share reactions in the call.",["Spin the picker or choose together","Use a watch-party tool, or count down “3, 2, 1, play”","Keep the call open, mute during dialogue and react in the gaps"],[["ideas","Movie picker",["Home Alone","Elf","The Holiday","Love Actually","It’s a Wonderful Life","The Polar Express","A Christmas Story","Klaus","Arthur Christmas","Little Women"]],["links",[S("watch party extension for netflix"),S("best christmas movies for couples")]]]],
-["❓","Create Christmas quizzes","Make questions about each other, your relationship and Christmas traditions, then quiz each other.",["Write 8 questions each in secret","Mix easy, silly and tricky ones","Take turns asking, then total the score below"],[["count",16,"correct answers"]]],
+["❓","Create Christmas quizzes","Make questions about each other, your relationship and Christmas traditions, then quiz each other.",["Write 10 questions each in secret","Mix easy, silly and tricky ones","Take turns asking, then total the score below"],[["count",16,"correct answers"]]],
 ["💌","Write a letter to your future selves","Write about your relationship today and agree to read the letters next Christmas.",["Write for 15 minutes, no peeking","Describe where you are, what you love and what you hope","Seal it and set a reminder for next Christmas"],[["timer",15],["note","A line from my letter I want to remember"]]],
 ["💛","The appreciation challenge","Take turns naming 20 things you appreciate about each other without repeating anything.",["Decide who starts","No repeats, no skipping","Count every point with the counter below"],[["count",20,"things appreciated"]]],
 ["📺","Become Christmas news reporters","Each prepare a ridiculous two-minute broadcast about what’s happening in your imaginary North Pole.",["Take 10 minutes to write your story","Use a headline, an elf interview and the weather","Perform it live and score each other"],[["ideas","Breaking news idea",["Elves go on strike over cookie quality","Reindeer lose their GPS","Snowman elected mayor","Santa’s sleigh gets a parking ticket","Mrs. Claus opens a bakery"]],["timer",2]]],
@@ -254,8 +306,11 @@ function widget(w,d){
   if(t==="ideas"){
     b.innerHTML=`<b>${w[1]}</b><div class="big">Tap shuffle 👇</div><button class="ghost gold" type="button">🎲 Shuffle</button>`;
     b.querySelector("button").onclick=()=>b.querySelector(".big").textContent=w[2][Math.floor(Math.random()*w[2].length)];
+  }else if(t==="treelink"){
+    b.innerHTML=`<b>Decorate the tree!</b><div class="row" style="margin-top:.6rem"><a class="lnk" href="tree.html">🎄 Decorate the tree</a></div>`;
   }else if(t==="links"){
-b.innerHTML=`<b>Decorate the tree!</b><div class="row" style="margin-top:.6rem"><a class="lnk" href="tree.html">🎄 Decorate the tree</a></div>`;  }else if(t==="note"){
+    b.innerHTML=`<b>Useful links</b><div class="row" style="margin-top:.6rem">${w[1].map(l=>`<a class="lnk" target="_blank" rel="noopener" href="${l[1]}">🔎 ${l[2]}</a>`).join("")}</div>`;
+  }else if(t==="note"){
     const k="n"+w[1];data[d][k]=data[d][k]||"";
     b.innerHTML=`<b>${w[1]}</b><textarea>${data[d][k]}</textarea>`;
     b.querySelector("textarea").oninput=e=>{data[d][k]=e.target.value;save()};
@@ -281,7 +336,7 @@ b.innerHTML=`<b>Decorate the tree!</b><div class="row" style="margin-top:.6rem">
     b.innerHTML=`<b>Quick practice tree</b> <small>(tap the tree to hang ornaments)</small><div class="pal">${em.map((e,i)=>`<button type="button" class="${i?"":"on"}">${e}</button>`).join("")}</div><div class="tree"><div class="cone"></div><div class="trunk"></div></div><button class="ghost" type="button">Clear</button>`;
     const tr=b.querySelector(".tree");
     b.querySelectorAll(".pal button").forEach(x=>x.onclick=()=>{b.querySelectorAll(".pal button").forEach(y=>y.classList.remove("on"));x.classList.add("on");sel=x.textContent});
-    tr.onclick=e=>{const r=tr.getBoundingClientRect(),o=document.createElement("span");o.className="o";o.textContent=sel;o.style.left=(e.clientX-r.left)+"px";o.style.top=(e.clientY-r.top)+"px";tr.appendChild(o)};
+    tr.onclick=e=>{const r=tr.getBoundingClientRect(),o=document.createElement("span");o.className="o";o.textContent=sel;o.style.left=(e.clientX-r.left)+"px";o.style.top=(e.clientY-r.top)+"px";tr.appendChild(o);burst(e.clientX,e.clientY)};
     b.querySelector(".ghost").onclick=()=>tr.querySelectorAll(".o").forEach(x=>x.remove());
   }else if(t==="twist"){
     let sc=[0,0];b.innerHTML=`<b>Tongue twisters</b><div class="big">Tap “Next” to begin</div><div class="row"><button class="ghost gold" type="button">Next twister</button><button class="ghost" type="button">You +1</button><button class="ghost" type="button">Partner +1</button></div><p class="d" style="margin:.6rem 0 0">You 0 · Partner 0</p>`;
@@ -352,10 +407,176 @@ addEventListener("keydown",e=>{if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)
 render();
 (()=>{
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
-  const cv=$("#snow"),x=cv.getContext("2d");let W,H,f=[];
+  const cv=$("#snow"),x=cv.getContext("2d");let W,H,f=[],mx=-999,my=-999,gust=0;
   const size=()=>{W=cv.width=innerWidth;H=cv.height=innerHeight};size();addEventListener("resize",size);
+  addEventListener("pointermove",e=>{mx=e.clientX;my=e.clientY});
+  addEventListener("pointerleave",()=>{mx=-999;my=-999});
+  addEventListener("pointerdown",()=>{gust=6});
   for(let i=0;i<80;i++)f.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*2.6+.6,s:Math.random()*.8+.3,o:Math.random()*.5+.25,p:Math.random()*6});
-  (function loop(){x.clearRect(0,0,W,H);for(const s of f){s.y+=s.s;s.p+=.01;s.x+=Math.sin(s.p)*.4;if(s.y>H+5){s.y=-5;s.x=Math.random()*W}x.beginPath();x.arc(s.x,s.y,s.r,0,6.283);x.fillStyle=`rgba(255,255,255,${s.o})`;x.fill()}requestAnimationFrame(loop)})();
+  (function loop(){x.clearRect(0,0,W,H);gust*=.96;for(const s of f){s.y+=s.s;s.p+=.01;s.x+=Math.sin(s.p)*.4+gust*(s.r/3);
+    const dx=s.x-mx,dy=s.y-my,dd=Math.hypot(dx,dy);if(dd<100&&dd>0){s.x+=dx/dd*(100-dd)*.08;s.y+=dy/dd*(100-dd)*.04}
+    if(s.x>W+5)s.x=-5;if(s.x<-5)s.x=W+5;
+    if(s.y>H+5){s.y=-5;s.x=Math.random()*W}x.beginPath();x.arc(s.x,s.y,s.r,0,6.283);x.fillStyle=`rgba(255,255,255,${s.o})`;x.fill()}requestAnimationFrame(loop)})();
+})();
+</script>
+<script>
+/* ===== NEW: carols + extra interactive animations ===== */
+(()=>{
+  const fxOn=()=>!meta.calm&&!matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const yt=q=>"https://www.youtube.com/results?search_query="+encodeURIComponent(q);
+
+  /* Carols: play inside the page */
+  const SONGS=[["All I Want for Christmas Is You","aAkMkVFwAoo"],["Last Christmas","E8gmARGvPlI"],["Fairytale of New York","j9jbdgZidu8"]];
+  const nowEl=$("#carNow");
+  let yp=null,idx=-1,apiState=0,pendingId=null,errRun=0,title="";
+  const playing=n=>{title=n;nowEl.innerHTML=`🎵 ${n.replace(/</g,"&lt;")}<span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>`};
+  function load(id){
+    $("#carWrap").style.display="block";$("#carOpen").href="https://www.youtube.com/watch?v="+id;
+    if(yp&&yp.loadVideoById){yp.loadVideoById(id);return}
+    pendingId=id;
+    if(apiState)return;
+    apiState=1;
+    window.onYouTubeIframeAPIReady=()=>{yp=new YT.Player("carPlayer",{width:"100%",height:"100%",videoId:pendingId,playerVars:{autoplay:1,rel:0,playsinline:1},events:{onReady:e=>{try{e.target.playVideo()}catch(x){}},onError:onErr,onStateChange:onState}})};
+    const sc=document.createElement("script");sc.src="https://www.youtube.com/iframe_api";sc.onerror=()=>toast("Couldn’t load the YouTube player. Check your connection.");document.head.appendChild(sc);
+  }
+  function playSong(i,e){
+    idx=(i+SONGS.length)%SONGS.length;
+    playing(SONGS[idx][0]);load(SONGS[idx][1]);
+    if(e&&e.clientX!=null){notes(e.clientX,e.clientY);chime()}
+  }
+  const next=()=>playSong(idx+1),prev=()=>playSong(idx-1);
+  function onErr(e){
+    errRun++;const code=e&&e.data!=null?e.data:"?";
+    if(idx<0){toast("That video can’t be played inside a website (YouTube error "+code+"). Use the “Open on YouTube” link under the player.");return}
+    if(errRun<SONGS.length){toast("That one can’t play here (error "+code+"), trying the next song…");next()}
+    else toast("None of the songs could be played here. Try pasting another link.");
+  }
+  function onState(e){
+    if(e.data===0){idx>=0?next():0}
+    if(e.data===1){errRun=0;if(title)playing(title)}
+  }
+  const list=$("#carEn");
+  SONGS.forEach((sg,i)=>{const b=document.createElement("button");b.type="button";b.className="lnk";b.textContent="▶ "+sg[0];b.onclick=e=>playSong(i,e);list.appendChild(b)});
+  $("#carPrev").onclick=()=>playSong(idx<0?SONGS.length-1:idx-1);
+  $("#carNext").onclick=()=>playSong(idx+1);
+  $("#carRnd").onclick=e=>playSong(Math.floor(Math.random()*SONGS.length),e);
+  const goLink=()=>{
+    const v=$("#carUrl").value.trim();if(!v)return;
+    const m=v.match(/(?:v=|youtu\.be\/|embed\/|shorts\/|live\/)([\w-]{11})/)||v.match(/^([\w-]{11})$/);
+    if(!m)return toast("That doesn’t look like a YouTube link.");
+    idx=-1;errRun=0;playing("Your song");load(m[1]);
+  };
+  $("#carGo").onclick=goLink;$("#carUrl").onkeydown=e=>{if(e.key==="Enter")goLink()};
+
+  function notes(x,y){
+    if(!fxOn())return;
+    for(let i=0;i<9;i++){
+      const s=document.createElement("span");s.className="fx";s.textContent=["🎵","🎶","♪","♫"][i%4];s.style.left=x+"px";s.style.top=y+"px";s.style.fontSize=(1.1+Math.random()*1.2)+"rem";s.style.color="var(--gold2)";document.body.appendChild(s);
+      const dx=(Math.random()-.5)*160;
+      s.animate([{transform:"translate(0,0) rotate(0)",opacity:1},{transform:`translate(${dx}px,${-90-Math.random()*90}px) rotate(${(Math.random()-.5)*60}deg)`,opacity:0}],{duration:1400+Math.random()*600,easing:"ease-out"}).onfinish=()=>s.remove();
+    }
+  }
+
+  /* Lights: click to play a note and flicker */
+  const penta=[523.25,587.33,659.25,783.99,880,1046.5];
+  document.querySelectorAll("#lights .bulb").forEach((b,i)=>b.addEventListener("click",()=>{
+    b.classList.remove("flick");void b.offsetWidth;b.classList.add("flick");
+    tone(penta[i%penta.length],0,.6);
+    const r=b.getBoundingClientRect();if(fxOn())sparkle(r.left+7,r.top+20,6);
+  }));
+
+  function sparkle(x,y,n){
+    for(let i=0;i<n;i++){
+      const s=document.createElement("span");s.className="fx";s.textContent=["✨","✦","❄️"][i%3];s.style.left=x+"px";s.style.top=y+"px";s.style.fontSize=".9rem";document.body.appendChild(s);
+      const a=Math.random()*6.28,r=20+Math.random()*50;
+      s.animate([{transform:"translate(0,0) scale(1)",opacity:1},{transform:`translate(${Math.cos(a)*r}px,${Math.sin(a)*r+20}px) scale(.3)`,opacity:0}],{duration:800+Math.random()*400,easing:"ease-out"}).onfinish=()=>s.remove();
+    }
+  }
+
+  /* Cursor sparkle trail (mouse only) */
+  let last=0;
+  addEventListener("pointermove",e=>{
+    if(e.pointerType!=="mouse"||!fxOn())return;
+    const t=performance.now();if(t-last<70)return;last=t;
+    const s=document.createElement("span");s.className="fx";s.textContent=pick(["✨","❄️","✦"]);s.style.left=e.clientX+"px";s.style.top=e.clientY+"px";s.style.fontSize=".8rem";s.style.opacity=".8";document.body.appendChild(s);
+    s.animate([{transform:"translate(0,0) scale(1)",opacity:.8},{transform:`translate(${(Math.random()-.5)*20}px,28px) scale(.2)`,opacity:0}],{duration:900,easing:"ease-out"}).onfinish=()=>s.remove();
+  });
+
+  /* Tap empty background: little burst */
+  addEventListener("click",e=>{
+    if(!fxOn())return;
+    if(e.target.closest("button,a,input,textarea,select,label,dialog,.cell,.bulb,h1,.bar"))return;
+    sparkle(e.clientX,e.clientY,8);
+  });
+
+  /* Shooting stars */
+  function shoot(){
+    if(!fxOn()||document.hidden)return;
+    const s=document.createElement("span");s.className="fx";s.textContent="🌠";s.style.fontSize="1.6rem";
+    const x0=Math.random()*innerWidth*.7+innerWidth*.2,y0=Math.random()*innerHeight*.3;
+    s.style.left=x0+"px";s.style.top=y0+"px";document.body.appendChild(s);
+    s.animate([{transform:"translate(0,0)",opacity:0},{opacity:1,offset:.15},{transform:"translate(-320px,220px)",opacity:0}],{duration:1500,easing:"ease-in"}).onfinish=()=>s.remove();
+  }
+  setInterval(shoot,9000);
+
+  /* Santa's sleigh */
+  function sleigh(){
+    if(!fxOn()){toast("Calm mode is on 🕊️");return}
+    const s=document.createElement("div");s.className="sleigh";s.textContent="🦌🦌🛷🎅";s.style.top=(8+Math.random()*25)+"%";document.body.appendChild(s);
+    const W=innerWidth+420,dur=6500;
+    const anim=s.animate([{transform:"translate(-380px,0)"},{transform:`translate(${W*.3}px,-30px)`},{transform:`translate(${W*.6}px,20px)`},{transform:`translate(${W}px,-20px)`}],{duration:dur,easing:"linear"});
+    const trail=setInterval(()=>{const r=s.getBoundingClientRect();sparkle(r.left+10,r.top+30,2)},160);
+    anim.onfinish=()=>{clearInterval(trail);s.remove()};
+    tone(659,0,.2);tone(659,.25,.2);tone(659,.5,.5);tone(659,1,.2);tone(659,1.25,.2);tone(659,1.5,.5);
+    toast("🎅 Ho ho ho!");
+  }
+  $("#sleighT").onclick=sleigh;
+  $("h1").addEventListener("click",()=>{const h=$("h1");h.classList.remove("jump");void h.offsetWidth;h.classList.add("jump");if(fxOn()){const r=h.getBoundingClientRect();sparkle(r.left+r.width/2,r.top+r.height/2,14)}if(Math.random()<.4)sleigh()});
+})();
+</script>
+<script>
+/* ===== NEW v2: 20 visual effects ===== */
+(()=>{
+  const on=()=>!meta.calm&&!matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const R=(a,b)=>a+Math.random()*(b-a),Wd=()=>innerWidth,Ht=()=>innerHeight;
+  const cols=["#e8b95a","#f6d98f","#c93a55","#4fb39a","#7aa2ff","#ffffff","#ff8fb1"];
+  const penta=[523.25,587.33,659.25,783.99,880,1046.5];
+  const cv=document.createElement("canvas");cv.setAttribute("aria-hidden","true");cv.style.cssText="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:24";document.body.appendChild(cv);
+  const c=cv.getContext("2d");let P=[],going=false;
+  const fit=()=>{cv.width=innerWidth;cv.height=innerHeight};fit();addEventListener("resize",fit);
+  function loop(){c.clearRect(0,0,cv.width,cv.height);P=P.filter(p=>p.t>0);P.forEach(p=>p.f(p));if(P.length)requestAnimationFrame(loop);else{going=false;c.clearRect(0,0,cv.width,cv.height)}}
+  function add(p){P.push(p);if(!going){going=true;requestAnimationFrame(loop)}}
+  const el=(css,txt)=>{const e=document.createElement("div");e.className="fx";e.style.cssText=css;if(txt)e.textContent=txt;document.body.appendChild(e);return e};
+  const fin=(a,e)=>{a.onfinish=()=>e.remove()};
+
+  function boom(x,y){const col=pick(cols);for(let i=0;i<70;i++){const a=R(0,6.283),sp=R(1,6);add({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,t:90,col,f(p){p.vy+=.05;p.vx*=.985;p.vy*=.985;p.x+=p.vx;p.y+=p.vy;p.t--;c.globalAlpha=Math.max(0,p.t/90);c.fillStyle=p.col;c.beginPath();c.arc(p.x,p.y,2.2,0,6.283);c.fill();c.globalAlpha=1}})}tone(R(300,700),0,.15)}
+  const drift=(L,n,up)=>{for(let i=0;i<n;i++)setTimeout(()=>{const e=el(`left:${R(2,96)}%;top:0;font-size:${R(1.4,2.8)}rem`,pick(L));const y0=up?Ht()+40:-60,y1=up?-80:Ht()+40,dx=R(-60,60);fin(e.animate([{transform:`translate(0,${y0}px) rotate(0)`,opacity:1},{transform:`translate(${dx}px,${(y0+y1)/2}px) rotate(${R(-40,40)}deg)`,offset:.5},{transform:`translate(${-dx}px,${y1}px) rotate(${R(-90,90)}deg)`,opacity:.9}],{duration:R(3200,5500),easing:"ease-in-out"}),e)},i*110)};
+  const runner=(txt,bottom,size,bob)=>{const e=el(`left:0;bottom:${bottom}px;font-size:${size}rem;white-space:nowrap`,txt),w=Wd(),kf=[];for(let i=0;i<=8;i++)kf.push({transform:`translate(${-500+(w+600)*i/8}px,${i%2?-bob:0}px) rotate(${i%2?-4:4}deg)`});fin(e.animate(kf,{duration:5500,easing:"linear"}),e)};
+
+  const FX=[
+   ["🎊 Confetti",()=>{for(let i=0;i<140;i++){const side=i%2;add({x:side?Wd():0,y:Ht()*.8,vx:(side?-1:1)*R(4,13),vy:R(-17,-7),r:R(0,6),vr:R(-.3,.3),w:R(6,11),h:R(4,7),col:pick(cols),t:200,f(p){p.vy+=.28;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.t--;c.save();c.translate(p.x,p.y);c.rotate(p.r);c.globalAlpha=Math.min(1,p.t/40);c.fillStyle=p.col;c.fillRect(-p.w/2,-p.h/2,p.w,p.h);c.restore()}})}tone(523,0,.2);tone(784,.1,.3)}],
+   ["🎆 Fireworks",()=>{for(let k=0;k<6;k++)setTimeout(()=>boom(R(.15,.85)*Wd(),R(.12,.5)*Ht()),k*450)}],
+   ["🎁 Gift rain",()=>drift(["🎁"],26,false)],
+   ["🎈 Balloons",()=>drift(["🎈"],24,true)],
+   ["❤️ Hearts",()=>drift(["❤️","💖","💕"],30,true)],
+   ["🌌 Aurora",()=>{const e=el("inset:0;opacity:0;background:linear-gradient(115deg,transparent 10%,rgba(60,255,170,.35) 30%,rgba(120,90,255,.3) 50%,rgba(255,80,170,.25) 70%,transparent 90%);background-size:200% 100%;filter:blur(40px);mix-blend-mode:screen");fin(e.animate([{opacity:0,backgroundPosition:"0% 0%"},{opacity:.9,backgroundPosition:"60% 0%",offset:.3},{opacity:.8,backgroundPosition:"100% 0%",offset:.7},{opacity:0,backgroundPosition:"140% 0%"}],{duration:8000}),e)}],
+   ["🌨️ Blizzard",()=>{for(let i=0;i<350;i++)add({x:R(-200,Wd()),y:R(-Ht(),Ht()),vx:R(6,14),vy:R(4,9),r:R(1,3.2),t:300+i%60,f(p){p.x+=p.vx;p.y+=p.vy;if(p.x>Wd()+10)p.x=-10;if(p.y>Ht()+10)p.y=-10;p.t--;c.globalAlpha=Math.min(1,p.t/40)*.85;c.fillStyle="#fff";c.beginPath();c.arc(p.x,p.y,p.r,0,6.283);c.fill();c.globalAlpha=1}})}],
+   ["🪩 Disco",()=>{const e=el("inset:-50%;background:conic-gradient(red,orange,yellow,lime,cyan,blue,magenta,red);mix-blend-mode:overlay;opacity:0");fin(e.animate([{transform:"rotate(0)",opacity:0},{opacity:.55,offset:.15},{opacity:.5,offset:.85},{transform:"rotate(360deg)",opacity:0}],{duration:5000}),e);[523,659,784,1047,784,659].forEach((f,i)=>tone(f,i*.18,.2))}],
+   ["❄️ Giant snowflake",()=>{const e=el("left:50%;top:50%;font-size:9rem","❄️");fin(e.animate([{transform:"translate(-50%,-50%) rotate(0) scale(.1)",opacity:0},{transform:"translate(-50%,-50%) rotate(180deg) scale(1)",opacity:1,offset:.4},{transform:"translate(-50%,-50%) rotate(540deg) scale(1.6)",opacity:0}],{duration:3200,easing:"ease-in-out"}),e)}],
+   ["🦌 Reindeer",()=>runner("🦌🦌🦌🦌",20,3,26)],
+   ["🐧 Penguins",()=>runner("🐧🐧🐧🐧🐧",10,2.6,10)],
+   ["🔔 Bells",()=>{[35,65].forEach((l,k)=>{const e=el(`left:${l}%;top:0;font-size:3.4rem;transform-origin:50% 0`,"🔔");fin(e.animate([{transform:"rotate(0)"},{transform:"rotate(32deg)"},{transform:"rotate(-26deg)"},{transform:"rotate(18deg)"},{transform:"rotate(-10deg)"},{transform:"rotate(4deg)"},{transform:"rotate(0)"}],{duration:3200,delay:k*300,fill:"both",easing:"ease-in-out"}),e)});tone(1318,0,.5);tone(988,.3,.6);tone(1318,.9,.5);tone(988,1.2,.6)}],
+   ["🍭 Candy rain",()=>drift(["🍭","🍬"],28,false)],
+   ["☄️ Meteors",()=>{for(let i=0;i<14;i++)setTimeout(()=>{const sp=R(12,20);add({x:R(Wd()*.2,Wd()*1.1),y:R(-50,Ht()*.4),t:60,f(p){p.x-=sp;p.y+=sp*.7;p.t--;const g=c.createLinearGradient(p.x,p.y,p.x+90,p.y-63);g.addColorStop(0,"rgba(255,255,255,"+Math.max(0,p.t/60)+")");g.addColorStop(1,"rgba(255,255,255,0)");c.strokeStyle=g;c.lineWidth=2.5;c.beginPath();c.moveTo(p.x,p.y);c.lineTo(p.x+90,p.y-63);c.stroke()}})},i*250)}],
+   ["🌊 Ripples",()=>{for(let i=0;i<5;i++)setTimeout(()=>{const e=el("left:50%;top:50%;width:40px;height:40px;margin:-20px;border:3px solid #f6d98f;border-radius:50%");fin(e.animate([{transform:"scale(0)",opacity:.9},{transform:`scale(${Math.max(Wd(),Ht())/20})`,opacity:0}],{duration:1900,easing:"ease-out"}),e);tone(penta[i],0,.3)},i*260)}],
+   ["✨ Glitter curtain",()=>{for(let i=0;i<220;i++)add({x:R(0,Wd()),y:R(-Ht()*.8,0),vy:R(1.5,4),ph:R(0,6),sz:R(1,3.2),col:pick(cols),t:330,f(p){p.y+=p.vy;p.ph+=.12;p.x+=Math.sin(p.ph)*.7;p.t--;c.globalAlpha=Math.max(0,Math.min(1,p.t/40))*(.5+.5*Math.sin(p.ph*3));c.fillStyle=p.col;c.fillRect(p.x,p.y,p.sz,p.sz);c.globalAlpha=1}})}],
+   ["⛄ Snowman",()=>{const e=el("left:50%;bottom:0;font-size:7rem","⛄");fin(e.animate([{transform:"translate(-50%,120%)"},{transform:"translate(-50%,-10%)",offset:.25},{transform:"translate(-50%,10%)",offset:.35},{transform:"translate(-50%,-6%) rotate(-8deg)",offset:.5},{transform:"translate(-50%,0) rotate(8deg)",offset:.65},{transform:"translate(-50%,0) rotate(0)",offset:.85},{transform:"translate(-50%,120%)"}],{duration:4000}),e);tone(392,0,.2);tone(523,.2,.3)}],
+   ["⭐ Starry sky",()=>{for(let i=0;i<90;i++)add({x:R(0,Wd()),y:R(0,Ht()),sd:R(0,6),sz:R(1.5,4),t:420,f(p){p.t--;const a=Math.sin(Math.PI*(1-p.t/420))*(.5+.5*Math.sin(p.t/6+p.sd));c.globalAlpha=Math.max(0,a);c.fillStyle="#fff6df";c.fillRect(p.x-p.sz,p.y-.5,p.sz*2,1);c.fillRect(p.x-.5,p.y-p.sz,1,p.sz*2);c.globalAlpha=1}})}],
+   ["💡 Light wave",()=>{document.querySelectorAll("#lights .bulb").forEach((b,i)=>setTimeout(()=>{b.classList.remove("flick");void b.offsetWidth;b.classList.add("flick");tone(penta[i%6],0,.2)},i*70))}],
+   ["🚪 Door wave",()=>{[...document.querySelectorAll(".cell")].filter(x=>x.style.display!=="none").forEach((x,i)=>setTimeout(()=>x.animate([{transform:"translateY(0)"},{transform:"translateY(-14px) rotate(-2deg)"},{transform:"translateY(0)"}],{duration:520,easing:"ease-in-out"}),i*40))}]
+  ];
+  const box=$("#fxBtns");
+  FX.forEach(([label,fn])=>{const b=document.createElement("button");b.type="button";b.className="lnk";b.textContent=label;b.onclick=()=>fn();box.appendChild(b)});
 })();
 </script>
 <script type="module">
