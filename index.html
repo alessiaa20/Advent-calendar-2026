@@ -110,19 +110,10 @@ footer{text-align:center;margin-top:3rem;color:#a9c4bc;font-size:.9rem}
 footer .tips{max-width:36rem;margin:0 auto 1rem;line-height:1.6}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
-/* ===== NEW: carols panel + extra interactive animations ===== */
-.carols{display:block}
-.carols h4{font-family:var(--serif);color:var(--gold2);margin-bottom:.3rem;font-size:1.15rem}
-.carols .hint{color:#a9c4bc;font-size:.88rem;margin-bottom:.7rem}
-.carols .grp{margin:.6rem 0 .2rem;color:var(--gold);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase}
+/* ===== Interactive animations ===== */
 .chips{display:flex;flex-wrap:wrap;gap:.5rem}
 .chips .lnk{transition:transform .2s,background .2s}
 .chips .lnk:hover{transform:translateY(-3px) rotate(-1.5deg)}
-.now{margin-top:.8rem;min-height:1.6rem;font-family:var(--serif);color:var(--gold2);font-size:1.05rem}
-.eq{display:inline-flex;gap:3px;align-items:flex-end;height:18px;margin-left:.5rem;vertical-align:middle}
-.eq i{width:4px;background:var(--gold);border-radius:2px;animation:eq .8s ease-in-out infinite}
-.eq i:nth-child(2){animation-delay:.15s}.eq i:nth-child(3){animation-delay:.3s}.eq i:nth-child(4){animation-delay:.45s}
-@keyframes eq{0%,100%{height:4px}50%{height:18px}}
 .bulb{cursor:pointer;animation:twinkle 2.6s ease-in-out infinite}
 .bulb:nth-child(3n){animation-delay:.6s}.bulb:nth-child(3n+1){animation-delay:1.2s}.bulb:nth-child(5n){animation-delay:1.8s}
 @keyframes twinkle{0%,100%{opacity:1;filter:brightness(1)}50%{opacity:.55;filter:brightness(.7)}}
@@ -137,16 +128,11 @@ h1.jump{animation:jump .8s cubic-bezier(.3,1.6,.5,1)}
 .cell.today:not(.open) .door .orn{animation:bob 1.6s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(-5px) scale(1.12)}}
 .fx{position:fixed;z-index:22;pointer-events:none;will-change:transform,opacity}
-.sleigh{position:fixed;z-index:25;pointer-events:none;font-size:3rem;white-space:nowrap;left:0;top:14%}
 .tree .o{animation:sway 3s ease-in-out infinite;transform-origin:50% 0}
 @keyframes sway{0%,100%{transform:translate(-50%,-50%) rotate(-7deg)}50%{transform:translate(-50%,-50%) rotate(7deg)}}
 
-/* ===== NEW v2: in-page player + 20 effects ===== */
+/* ===== Visual magic effects ===== */
 button.lnk{font:inherit;font-size:.88rem;background:transparent;cursor:pointer}
-.vid{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;border:1px solid rgba(232,185,90,.4);background:#000}
-.vid iframe{position:absolute;inset:0;width:100%;height:100%}
-#carWrap{width:100%;max-width:640px;margin-top:.9rem}
-.carin{font:inherit;font-size:.9rem;color:var(--snow);background:rgba(8,25,26,.7);border:1px solid rgba(232,185,90,.35);border-radius:99px;padding:.4rem .8rem;min-width:200px;flex:1;max-width:320px}
 #fxBtns .lnk:hover{transform:translateY(-3px) scale(1.05)}
 </style>
 </head>
@@ -173,25 +159,16 @@ button.lnk{font:inherit;font-size:.88rem;background:transparent;cursor:pointer}
     <input type="text" id="n1" placeholder="Your name" aria-label="Your name"><input type="text" id="n2" placeholder="Partner’s name" aria-label="Partner name">
     <input type="text" id="q" placeholder="🔎 Search doors" aria-label="Search doors">
     <select id="ft" aria-label="Filter"><option value="all">All doors</option><option value="todo">Not done yet</option><option value="done">Done together</option></select>
-    <div class="btns"><button class="ghost" id="jing" type="button">🔔 Jingle</button><button class="ghost" id="sndT" type="button">🔊 Sound</button><button class="ghost" id="snowT" type="button">❄️ Snow</button><button class="ghost" id="calmT" type="button">🕊️ Calm mode</button><button class="ghost" id="txtT" type="button">A+ Text</button><button class="ghost" id="sleighT" type="button">🎅 Sleigh</button><button class="ghost" id="copyAll" type="button">📋 Copy memories</button></div>
+    <div class="btns"><button class="ghost" id="txtT" type="button">A+ Text</button><button class="ghost" id="copyAll" type="button">📋 Copy memories</button></div>
   </section>
   <section class="bar panels">
     <div><h4>Today</h4><button class="ghost gold" id="today" type="button"></button><small id="streak" style="margin-top:.6rem"></small><small id="badges"></small><p class="lede" id="lnote" style="margin-top:.7rem;font-style:italic;font-size:.95rem"></p><button class="ghost" id="nl" type="button" style="margin-top:.5rem">💝 New love note</button></div>
     <div><h4>Our two clocks 🌍</h4><div class="row"><select id="z1" aria-label="Your time zone"></select><b id="t1"></b></div><div class="row" style="margin-top:.5rem"><select id="z2" aria-label="Partner time zone"></select><b id="t2"></b></div><small style="margin-top:.5rem" id="zd"></small></div>
     <div><h4>Gift ideas 🎁</h4><div class="row"><input type="text" id="gi" placeholder="Add an idea" aria-label="Gift idea" style="max-width:170px;font:inherit;font-size:.9rem;color:var(--snow);background:rgba(8,25,26,.7);border:1px solid rgba(232,185,90,.35);border-radius:99px;padding:.4rem .8rem"><button class="ghost" id="ga" type="button">Add</button></div><ul id="gl"></ul></div>
   </section>
-  <section class="bar carols" aria-label="Christmas carols">
-    <h4>🎶 Christmas carols on YouTube</h4>
-    <p class="hint">Tap a song and it plays right here on the page. Press play on both screens at the same moment.</p>
-    <div class="chips" id="carEn"></div>
-    <div id="carWrap" style="display:none"><div class="vid" id="carFrame"><div id="carPlayer"></div></div><a class="lnk" id="carOpen" target="_blank" rel="noopener" href="https://www.youtube.com" style="margin-top:.6rem">↗ Open this video on YouTube</a></div>
-    <div class="row" style="margin-top:.9rem"><button class="ghost" id="carPrev" type="button">⏮ Prev</button><button class="ghost" id="carNext" type="button">Next ⏭</button><button class="ghost gold" id="carRnd" type="button">🎲 Surprise us</button></div>
-    <div class="row" style="margin-top:.7rem"><input type="text" class="carin" id="carUrl" placeholder="Paste any YouTube link" aria-label="YouTube link"><button class="ghost" id="carGo" type="button">▶ Play link</button></div>
-    <div class="now" id="carNow" aria-live="polite"></div>
-  </section>
-  <section class="bar carols" aria-label="Visual magic">
-    <h4>✨ 20 visual magic effects</h4>
-    <p class="hint">Tap any button and watch the screen come alive.</p>
+  <section class="bar" aria-label="Visual magic">
+    <h4 style="font-family:var(--serif);color:var(--gold2);margin-bottom:.3rem;font-size:1.15rem">✨ 20 visual magic effects</h4>
+    <p style="color:#a9c4bc;font-size:.88rem;margin-bottom:.7rem">Tap any button and watch the screen come alive.</p>
     <div class="chips" id="fxBtns"></div>
   </section>
   <main class="grid" id="grid"></main>
@@ -233,7 +210,7 @@ const $=s=>document.querySelector(s);
 const grid=$("#grid"),peek=$("#peek"),dlg=$("#dlg");
 let opened=new Set(),data={},cur=0,iv=null;
 try{data=JSON.parse(localStorage.getItem("advent-data")||"{}")}catch(e){}
-const save=()=>{try{localStorage.setItem("advent-open",JSON.stringify([...opened]));localStorage.setItem("advent-data",JSON.stringify(data))}catch(e){} window.cloudSave&&window.cloudSave()};// Start every page visit with all doors closed; keep the saved memories.
+const save=()=>{try{localStorage.setItem("advent-open",JSON.stringify([...opened]));localStorage.setItem("advent-data",JSON.stringify(data))}catch(e){} window.cloudSave&&window.cloudSave()};
 opened.clear();save();
 const now=new Date();
 const unlocked=d=>now.getFullYear()>2026||(now.getFullYear()===2026&&now.getMonth()===11&&d<=now.getDate());
@@ -357,7 +334,7 @@ const QS=["What’s a Christmas memory that always makes you smile?","What’s o
 const CH=["Speak only in rhymes for 2 minutes.","Show your partner the coziest corner of your home.","Send each other a photo of something that’s red, right now.","Hum a Christmas song and let your partner guess it.","Give each other a compliment in a silly accent.","Take a screenshot together with funny faces.","Share a song that reminds you of your partner.","Do a 30-second dance on camera."];
 const VB=["Cozy acoustic Christmas","Classic crooners and jazz","Instrumental piano candlelight","Upbeat pop carols","Soft lo-fi snowfall","Choir and orchestra"];
 const CP=["You light up every call.","You’re the best part of my day.","Your kindness amazes me.","You make me laugh like no one else.","I admire how you care for people.","You’re beautiful inside and out.","Thank you for always showing up for me.","You make hard days softer."];
-function tone(f,t0,du){if(meta.mute)return;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type="triangle";o.frequency.value=f;o.connect(g);g.connect(ac.destination);const s=ac.currentTime+t0;g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(.2,s+.02);g.gain.exponentialRampToValueAtTime(.0001,s+du);o.start(s);o.stop(s+du+.05)}catch(e){}}
+function tone(f,t0,du){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type="triangle";o.frequency.value=f;o.connect(g);g.connect(ac.destination);const s=ac.currentTime+t0;g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(.2,s+.02);g.gain.exponentialRampToValueAtTime(.0001,s+du);o.start(s);o.stop(s+du+.05)}catch(e){}}
 function chime(){tone(784,0,.5);tone(1047,.15,.7)}
 function extras(){
   let run=0,best=0,dn=0;for(let d=1;d<=24;d++){if(data[d]&&data[d].done){run++;dn++;best=Math.max(best,run)}else run=0}
@@ -393,11 +370,6 @@ $("#n1").value=meta.n1||"";$("#n2").value=meta.n2||"";
 $("#n1").oninput=e=>{meta.n1=e.target.value;sm();extras()};$("#n2").oninput=e=>{meta.n2=e.target.value;sm();extras()};
 $("#q").oninput=e=>{fq=e.target.value.toLowerCase().trim();extras()};$("#ft").onchange=e=>{ft=e.target.value;extras()};
 const nl=()=>$("#lnote").textContent="“"+pick(NOTE)+"”";nl();$("#nl").onclick=nl;
-$("#jing").onclick=()=>{if(meta.mute)return toast("Sound is off");const n=[[329.63,.5],[329.63,.5],[329.63,1],[329.63,.5],[329.63,.5],[329.63,1],[329.63,.5],[392,.5],[261.63,.5],[293.66,.5],[329.63,1.5]];let t=0;n.forEach(([f,u])=>{tone(f,t*.3,u*.3);t+=u})};
-const setBtn=()=>{$("#sndT").textContent=meta.mute?"🔇 Sound off":"🔊 Sound on"};setBtn();
-$("#sndT").onclick=()=>{meta.mute=!meta.mute;sm();setBtn()};
-const sn=()=>{$("#snow").style.display=meta.nosnow?"none":"";$("#snowT").textContent=meta.nosnow?"☀️ Snow off":"❄️ Snow on"};sn();$("#snowT").onclick=()=>{meta.nosnow=!meta.nosnow;sm();sn()};
-const cm=()=>{document.body.classList.toggle("calm",!!meta.calm);$("#calmT").textContent=meta.calm?"🕊️ Calm: on":"🕊️ Calm mode"};cm();$("#calmT").onclick=()=>{meta.calm=!meta.calm;sm();cm()};
 const tx=()=>{document.documentElement.style.fontSize=meta.big?"120%":""};tx();$("#txtT").onclick=()=>{meta.big=!meta.big;sm();tx()};
 $("#copyAll").onclick=()=>{const t=D.map((a,i)=>{const x=data[i+1];return x&&(x.mem||x.done||x.rate)?`Dec ${i+1}: ${a[1]}${x.done?" ✓":""}${x.rate?" "+"♥".repeat(x.rate):""}${x.mood?" "+x.mood:""}${x.mem?"\n  "+x.mem:""}`:""}).filter(Boolean).join("\n");if(!t)return toast("No memories yet. Complete a door first!");try{navigator.clipboard.writeText(t).then(()=>toast("All memories copied!"),()=>toast("Couldn’t copy"))}catch(e){toast("Couldn’t copy")}};
 const ZN=[["Europe/Bucharest","Romania"],["America/New_York","Jacksonville"]];
@@ -423,62 +395,9 @@ render();
 })();
 </script>
 <script>
-/* ===== NEW: carols + extra interactive animations ===== */
+/* ===== Interactive animations ===== */
 (()=>{
-  const fxOn=()=>!meta.calm&&!matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const yt=q=>"https://www.youtube.com/results?search_query="+encodeURIComponent(q);
-
-  /* Carols: play inside the page */
-  const SONGS=[["All I Want for Christmas Is You","aAkMkVFwAoo"],["Last Christmas","E8gmARGvPlI"],["Fairytale of New York","j9jbdgZidu8"]];
-  const nowEl=$("#carNow");
-  let yp=null,idx=-1,apiState=0,pendingId=null,errRun=0,title="";
-  const playing=n=>{title=n;nowEl.innerHTML=`🎵 ${n.replace(/</g,"&lt;")}<span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>`};
-  function load(id){
-    $("#carWrap").style.display="block";$("#carOpen").href="https://www.youtube.com/watch?v="+id;
-    if(yp&&yp.loadVideoById){yp.loadVideoById(id);return}
-    pendingId=id;
-    if(apiState)return;
-    apiState=1;
-    window.onYouTubeIframeAPIReady=()=>{yp=new YT.Player("carPlayer",{width:"100%",height:"100%",videoId:pendingId,playerVars:{autoplay:1,rel:0,playsinline:1},events:{onReady:e=>{try{e.target.playVideo()}catch(x){}},onError:onErr,onStateChange:onState}})};
-    const sc=document.createElement("script");sc.src="https://www.youtube.com/iframe_api";sc.onerror=()=>toast("Couldn’t load the YouTube player. Check your connection.");document.head.appendChild(sc);
-  }
-  function playSong(i,e){
-    idx=(i+SONGS.length)%SONGS.length;
-    playing(SONGS[idx][0]);load(SONGS[idx][1]);
-    if(e&&e.clientX!=null){notes(e.clientX,e.clientY);chime()}
-  }
-  const next=()=>playSong(idx+1),prev=()=>playSong(idx-1);
-  function onErr(e){
-    errRun++;const code=e&&e.data!=null?e.data:"?";
-    if(idx<0){toast("That video can’t be played inside a website (YouTube error "+code+"). Use the “Open on YouTube” link under the player.");return}
-    if(errRun<SONGS.length){toast("That one can’t play here (error "+code+"), trying the next song…");next()}
-    else toast("None of the songs could be played here. Try pasting another link.");
-  }
-  function onState(e){
-    if(e.data===0){idx>=0?next():0}
-    if(e.data===1){errRun=0;if(title)playing(title)}
-  }
-  const list=$("#carEn");
-  SONGS.forEach((sg,i)=>{const b=document.createElement("button");b.type="button";b.className="lnk";b.textContent="▶ "+sg[0];b.onclick=e=>playSong(i,e);list.appendChild(b)});
-  $("#carPrev").onclick=()=>playSong(idx<0?SONGS.length-1:idx-1);
-  $("#carNext").onclick=()=>playSong(idx+1);
-  $("#carRnd").onclick=e=>playSong(Math.floor(Math.random()*SONGS.length),e);
-  const goLink=()=>{
-    const v=$("#carUrl").value.trim();if(!v)return;
-    const m=v.match(/(?:v=|youtu\.be\/|embed\/|shorts\/|live\/)([\w-]{11})/)||v.match(/^([\w-]{11})$/);
-    if(!m)return toast("That doesn’t look like a YouTube link.");
-    idx=-1;errRun=0;playing("Your song");load(m[1]);
-  };
-  $("#carGo").onclick=goLink;$("#carUrl").onkeydown=e=>{if(e.key==="Enter")goLink()};
-
-  function notes(x,y){
-    if(!fxOn())return;
-    for(let i=0;i<9;i++){
-      const s=document.createElement("span");s.className="fx";s.textContent=["🎵","🎶","♪","♫"][i%4];s.style.left=x+"px";s.style.top=y+"px";s.style.fontSize=(1.1+Math.random()*1.2)+"rem";s.style.color="var(--gold2)";document.body.appendChild(s);
-      const dx=(Math.random()-.5)*160;
-      s.animate([{transform:"translate(0,0) rotate(0)",opacity:1},{transform:`translate(${dx}px,${-90-Math.random()*90}px) rotate(${(Math.random()-.5)*60}deg)`,opacity:0}],{duration:1400+Math.random()*600,easing:"ease-out"}).onfinish=()=>s.remove();
-    }
-  }
+  const fxOn=()=>!matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* Lights: click to play a note and flicker */
   const penta=[523.25,587.33,659.25,783.99,880,1046.5];
@@ -522,25 +441,16 @@ render();
   }
   setInterval(shoot,9000);
 
-  /* Santa's sleigh */
-  function sleigh(){
-    if(!fxOn()){toast("Calm mode is on 🕊️");return}
-    const s=document.createElement("div");s.className="sleigh";s.textContent="🦌🦌🛷🎅";s.style.top=(8+Math.random()*25)+"%";document.body.appendChild(s);
-    const W=innerWidth+420,dur=6500;
-    const anim=s.animate([{transform:"translate(-380px,0)"},{transform:`translate(${W*.3}px,-30px)`},{transform:`translate(${W*.6}px,20px)`},{transform:`translate(${W}px,-20px)`}],{duration:dur,easing:"linear"});
-    const trail=setInterval(()=>{const r=s.getBoundingClientRect();sparkle(r.left+10,r.top+30,2)},160);
-    anim.onfinish=()=>{clearInterval(trail);s.remove()};
-    tone(659,0,.2);tone(659,.25,.2);tone(659,.5,.5);tone(659,1,.2);tone(659,1.25,.2);tone(659,1.5,.5);
-    toast("🎅 Ho ho ho!");
-  }
-  $("#sleighT").onclick=sleigh;
-  $("h1").addEventListener("click",()=>{const h=$("h1");h.classList.remove("jump");void h.offsetWidth;h.classList.add("jump");if(fxOn()){const r=h.getBoundingClientRect();sparkle(r.left+r.width/2,r.top+r.height/2,14)}if(Math.random()<.4)sleigh()});
+  $("h1").addEventListener("click",()=>{
+    const h=$("h1");h.classList.remove("jump");void h.offsetWidth;h.classList.add("jump");
+    if(fxOn()){const r=h.getBoundingClientRect();sparkle(r.left+r.width/2,r.top+r.height/2,14)}
+  });
 })();
 </script>
 <script>
-/* ===== NEW v2: 20 visual effects ===== */
+/* ===== Visual magic effects ===== */
 (()=>{
-  const on=()=>!meta.calm&&!matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const on=()=>!matchMedia("(prefers-reduced-motion: reduce)").matches;
   const R=(a,b)=>a+Math.random()*(b-a),Wd=()=>innerWidth,Ht=()=>innerHeight;
   const cols=["#e8b95a","#f6d98f","#c93a55","#4fb39a","#7aa2ff","#ffffff","#ff8fb1"];
   const penta=[523.25,587.33,659.25,783.99,880,1046.5];
@@ -596,13 +506,11 @@ const app=initializeApp({
 });
 const db=getFirestore(app);
 
-// SCHIMBĂ asta cu un text lung și al vostru, apoi nu-l mai da nimănui
 const ROOM="k7Qx92mWvR4tLp8ZcN3aYb6H";
 const ref=doc(db,"calendars",ROOM);
 
 let ready=false,timer=null;
 
-// salvare în cloud (grupată, ca să nu scrie la fiecare literă)
 window.cloudSave=()=>{
   if(!ready)return;
   clearTimeout(timer);
@@ -618,7 +526,6 @@ window.cloudSave=()=>{
   },800);
 };
 
-// citire în timp real
 onSnapshot(ref,snap=>{
   if(ready&&(snap.metadata.hasPendingWrites||timer))return;
   const v=snap.exists()?snap.data():{};
