@@ -151,7 +151,6 @@ button.lnk{font:inherit;font-size:.88rem;background:transparent;cursor:pointer}
   <section class="bar" aria-label="Progress and settings">
     <div class="progress"><b id="count">0 of 24 doors open</b><small id="done">0 done together</small><div class="track"><div class="fill" id="fill"></div></div></div>
     <div class="btns">
-
       <button class="ghost" id="reset" type="button">Close all doors</button>
     </div>
   </section>
@@ -207,7 +206,7 @@ const D=[
 ];
 const WIDE=[1,6,12,17,20,24];
 const $=s=>document.querySelector(s);
-const grid=$("#grid"),peek=$("#peek"),dlg=$("#dlg");
+const grid=$("#grid"),dlg=$("#dlg");
 let opened=new Set(),data={},cur=0,iv=null;
 try{data=JSON.parse(localStorage.getItem("advent-data")||"{}")}catch(e){}
 const save=()=>{try{localStorage.setItem("advent-open",JSON.stringify([...opened]));localStorage.setItem("advent-data",JSON.stringify(data))}catch(e){} window.cloudSave&&window.cloudSave()};
@@ -228,9 +227,9 @@ D.forEach((a,i)=>{
   c.querySelector(".inside").addEventListener("click",()=>showDay(d));
   grid.appendChild(c);
 });
-const canOpen=d=>peek.checked||unlocked(d);
+const canOpen=d=>unlocked(d);
 function tryOpen(d,e){
-  if(!canOpen(d)){const c=$("#d"+d);c.classList.remove("shake");void c.offsetWidth;c.classList.add("shake");toast(`Door ${d} opens on December ${d}. Switch on “Open any door” to peek.`);return}
+  if(!canOpen(d)){const c=$("#d"+d);c.classList.remove("shake");void c.offsetWidth;c.classList.add("shake");toast(`Door ${d} opens on December ${d}.`);return}
   opened.add(d);save();render();burst(e?e.clientX:innerWidth/2,e?e.clientY:innerHeight/2);chime();setTimeout(()=>showDay(d),850);
 }
 function render(){
@@ -248,7 +247,6 @@ function render(){
   $("#done").textContent=`${dn} done together`;
   $("#fill").style.width=(opened.size/24*100)+"%";extras();
 }
-peek.addEventListener("change",render);
 $("#reset").addEventListener("click",()=>{opened.clear();save();render();toast("All doors are closed again. Your notes are kept.")});
 let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),2800)}
 function burst(x,y){
